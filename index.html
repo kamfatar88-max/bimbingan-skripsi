@@ -4,317 +4,737 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistem Informasi Bimbingan Skripsi</title>
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --primary-color: #3498db;
       --secondary-color: #2c3e50;
     }
-    .similarity-check-container {
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 5px;
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f8f9fa;
-      border: 1px solid #dee2e6;
     }
+
+    #wrapper {
+      display: flex;
+    }
+
+    #sidebar {
+      width: 250px;
+      min-height: 100vh;
+      background-color: #2c3e50;
+      color: white;
+      transition: all 0.3s;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      background-color: #1a252f;
+      text-align: center;
+    }
+
+    .list-unstyled a {
+      color: #d1d8e0;
+      padding: 15px;
+      text-decoration: none;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .list-unstyled a:hover,
+    .list-unstyled a.active {
+      background-color: #34495e;
+      color: white;
+    }
+
+    .list-unstyled .sub-menu a {
+      padding-left: 30px;
+      font-size: 0.9em;
+    }
+
+    #page-content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .content-section {
+      display: none;
+    }
+
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
     .similarity-result {
       margin-top: 10px;
       padding: 10px;
       border-radius: 5px;
     }
+
     .similarity-high-bg {
       background-color: #ffeaea;
       border: 1px solid #f5c6cb;
     }
+
     .similarity-medium-bg {
       background-color: #fff3cd;
       border: 1px solid #ffeaa7;
     }
+
     .similarity-low-bg {
       background-color: #d4edda;
       border: 1px solid #c3e6cb;
     }
-    .similarity-high {
-      color: #c0392b;
-      font-weight: bold;
+
+    .badge.bg-success {
+      background-color: #27ae60 !important;
     }
-    .similarity-medium {
-      color: #f39c12;
-      font-weight: bold;
+
+    .badge.bg-warning {
+      background-color: #f39c12 !important;
     }
-    .similarity-low {
-      color: #27ae60;
-      font-weight: bold;
-    }
-    .recommendation {
-      font-weight: bold;
-      font-size: 1.1em;
+
+    .notification-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050;
     }
   </style>
 </head>
 <body>
   <!-- Notification Toast -->
   <div class="notification-toast toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-    <div class="toast-header">
+    <div class="toast-header bg-info text-white">
       <strong class="me-auto">SIBiS Notification</strong>
       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
-    <div class="toast-body"></div>
+    <div class="toast-body">Notifikasi akan muncul di sini.</div>
   </div>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <ul class="list-unstyled">
-      <li><a href="#bimbingan" class="main-item"><i class="fas fa-user-graduate"></i><span>Bimbingan</span></a></li>
-      <li><a href="#skripsi" class="main-item"><i class="fas fa-book"></i><span>Skripsi</span></a></li>
-      <li><a href="#statistik" class="main-item"><i class="fas fa-chart-bar"></i><span>Statistik</span></a></li>
-    </ul>
+  <!-- Similarity Modal -->
+  <div class="modal fade" id="similarityModal" tabindex="-1" aria-labelledby="similarityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="similarityModalLabel">Hasil Pengecekan Similarity</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Sistem telah menganalisis judul proposal Anda dan membandingkannya dengan database skripsi yang ada.
+          </div>
+          <div class="similarity-result" id="similarityResult">
+            <!-- Hasil similarity akan ditampilkan di sini -->
+          </div>
+          <div class="mt-3">
+            <h6>Judul-judul yang mirip:</h6>
+            <div id="similarTitlesList" class="mt-2">
+              <!-- Daftar judul yang mirip akan ditampilkan di sini -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-primary" id="proceedAnywayBtn">Lanjutkan Meskipun Mirip</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Page Content -->
-  <div id="content">
-    <div class="container-fluid">
-      <!-- Main Stats -->
-      <div class="row mb-4" id="mainDashboardStats">
-        <div class="col-md-3 col-sm-6 mb-3">
-          <div class="card main-stat-card bg-primary text-white" data-target="databaseSkripsi">
-            <i class="fas fa-book"></i>
-            <h2 id="totalSkripsiMain">0</h2>
-            <h5>Total Skripsi</h5>
-            <p>Seluruh judul skripsi</p>
+  <div class="d-flex" id="wrapper">
+    <!-- Sidebar -->
+    <div class="bg-dark" id="sidebar">
+      <div class="sidebar-header">
+        <h3 class="m-0">eSIBiS</h3>
+      </div>
+      <ul class="list-unstyled">
+        <li>
+          <a href="#bimbinganSubmenu" data-bs-toggle="collapse" class="dropdown-toggle active">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Bimbingan</span>
+          </a>
+          <ul class="sub-menu show collapse list-unstyled" id="bimbinganSubmenu">
+            <li><a href="#pengajuan" class="sub-item active"><i class="fas fa-file-upload"></i><span>Pengajuan Proposal</span></a></li>
+            <li><a href="#dataBimbingan" class="sub-item"><i class="fas fa-database"></i><span>Data Bimbingan</span></a></li>
+            <li><a href="#tahapBimbingan" class="sub-item"><i class="fas fa-tasks"></i><span>Tahap Bimbingan</span></a></li>
+            <li><a href="#statusBimbingan" class="sub-item"><i class="fas fa-chart-line"></i><span>Status Bimbingan</span></a></li>
+          </ul>
+        </li>
+        <li><a href="#uploadSkripsi" class="main-item"><i class="fas fa-upload"></i><span>Upload Skripsi Final</span></a></li>
+        <li><a href="#statistikContent" class="main-item"><i class="fas fa-chart-pie"></i><span>Statistik</span></a></li>
+      </ul>
+    </div>
+
+    <!-- Page Content -->
+    <div id="page-content">
+      <!-- Main Dashboard Stats -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+              <i class="fas fa-book"></i>
+              <h2 id="totalSkripsiMain">0</h2>
+              <h5>Total Skripsi</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-white bg-success">
+            <div class="card-body text-center">
+              <i class="fas fa-user-check"></i>
+              <h2 id="selesaiBimbinganMain">0</h2>
+              <h5>Selesai Bimbingan</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-secondary text-white">
+            <div class="card-body text-center">
+              <i class="fas fa-users"></i>
+              <h2 id="totalBimbinganMain">0</h2>
+              <h5>Total Bimbingan</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h2 id="earlyWarningMain">0</h2>
+              <h5>Early Warning</h5>
+              <p>Perlu perhatian khusus</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Pengajuan Proposal -->
-      <div class="content-section" id="pengajuanProposal">
+      <!-- Bimbingan Section -->
+      <div id="bimbinganContent">
+        <!-- Pengajuan Proposal -->
+        <div class="content-section" id="pengajuan">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Pengajuan Proposal Skripsi</h5>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Pastikan proposal telah melalui konsultasi dengan calon pembimbing sebelum diajukan.
+              </div>
+              <form id="pengajuanProposalForm">
+                <div class="mb-3">
+                  <label for="nimProposal" class="form-label">NIM</label>
+                  <input type="text" class="form-control" id="nimProposal" required />
+                </div>
+                <div class="mb-3">
+                  <label for="namaProposal" class="form-label">Nama</label>
+                  <input type="text" class="form-control" id="namaProposal" required />
+                </div>
+                <div class="mb-3">
+                  <label for="prodiProposal" class="form-label">Program Studi</label>
+                  <select class="form-select" id="prodiProposal" required>
+                    <option value="">Pilih Program Studi</option>
+                    <option value="TI">Teknik Informatika</option>
+                    <option value="SI">Sistem Informasi</option>
+                    <option value="TM">Teknik Mesin</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="tahunAkademik" class="form-label">Tahun Akademik</label>
+                  <select class="form-select" id="tahunAkademik" required>
+                    <option value="">Pilih Tahun</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="judulProposal" class="form-label">Judul Proposal</label>
+                  <input type="text" class="form-control" id="judulProposal" required />
+                  <div class="form-text">Gunakan format yang jelas dan sesuai dengan kaidah penulisan ilmiah</div>
+                </div>
+
+                <!-- Similarity Check Section -->
+                <div class="similarity-check-container mb-3">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Pengecekan Similarity Judul</h6>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="checkSimilarityBtn">
+                      <i class="fas fa-search"></i> Cek Similarity
+                    </button>
+                  </div>
+                  <div id="similarityCheckResult" class="mt-2"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="dosenPembimbing1" class="form-label">Pembimbing 1</label>
+                  <select class="form-select" id="dosenPembimbing1" required>
+                    <option value="">Pilih Dosen</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="dosenPembimbing2" class="form-label">Pembimbing 2 (Opsional)</label>
+                  <select class="form-select" id="dosenPembimbing2">
+                    <option value="">Pilih Dosen (Opsional)</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="fileProposal" class="form-label">Upload Proposal</label>
+                  <input type="file" class="form-control" id="fileProposal" accept=".pdf,.doc,.docx" required />
+                  <div class="form-text">Format file: PDF atau DOC/DOCX (maks. 10MB)</div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-paper-plane"></i> Ajukan Proposal
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Bimbingan -->
+        <div class="content-section" id="dataBimbingan" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Data Bimbingan Skripsi</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover" id="tableBimbingan">
+                  <thead>
+                    <tr>
+                      <th>NIM</th>
+                      <th>Nama</th>
+                      <th>Prodi</th>
+                      <th>Pembimbing 1</th>
+                      <th>Pembimbing 2</th>
+                      <th>Judul</th>
+                      <th>Status</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Data will be populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tahap Bimbingan -->
+        <div class="content-section" id="tahapBimbingan" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Tahap Bimbingan Skripsi</h5>
+            </div>
+            <div class="card-body">
+              <div class="progress mb-4" style="height: 30px;">
+                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Pengajuan Judul</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Bimbingan Proposal</div>
+                <div class="progress-bar bg-info" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Seminar Hasil</div>
+                <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Sidang Skripsi</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Skripsi Final -->
+      <div class="content-section" id="uploadSkripsi" style="display: none;">
         <div class="card">
           <div class="card-header">
-            <h5>Pengajuan Proposal Skripsi</h5>
+            <h5 class="card-title mb-0">Upload Skripsi Final</h5>
           </div>
           <div class="card-body">
-            <form id="pengajuanProposalForm">
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i> Upload skripsi final setelah dinyatakan lulus sidang.
+            </div>
+            <form id="uploadSkripsiForm">
               <div class="mb-3">
-                <label for="nimProposal" class="form-label">NIM</label>
-                <input type="text" class="form-control" id="nimProposal" required />
+                <label for="nimSkripsi" class="form-label">NIM</label>
+                <input type="text" class="form-control" id="nimSkripsi" required />
               </div>
               <div class="mb-3">
-                <label for="namaProposal" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="namaProposal" readonly />
+                <label for="namaSkripsi" class="form-label">Nama</label>
+                <input type="text" class="form-control" id="namaSkripsi" readonly />
               </div>
               <div class="mb-3">
-                <label for="prodiProposal" class="form-label">Program Studi</label>
-                <select class="form-select" id="prodiProposal" disabled required>
+                <label for="prodiSkripsi" class="form-label">Program Studi</label>
+                <select class="form-select" id="prodiSkripsi" disabled>
                   <option value="">Pilih Program Studi</option>
-                  <option value="Teknik Informatika">Teknik Informatika</option>
-                  <option value="Sistem Informasi">Sistem Informasi</option>
+                  <option value="TI">Teknik Informatika</option>
+                  <option value="SI">Sistem Informasi</option>
+                  <option value="TM">Teknik Mesin</option>
                 </select>
               </div>
               <div class="mb-3">
-                <label for="tahunAkademik" class="form-label">Tahun Akademik</label>
-                <select class="form-select" id="tahunAkademik" required></select>
+                <label for="judulSkripsiFinal" class="form-label">Judul Skripsi</label>
+                <input type="text" class="form-control" id="judulSkripsiFinal" readonly />
               </div>
               <div class="mb-3">
-                <label for="judulProposal" class="form-label">Judul Proposal</label>
-                <input type="text" class="form-control" id="judulProposal" required />
+                <label for="tahunLulus" class="form-label">Tahun Lulus</label>
+                <input type="number" class="form-control" id="tahunLulus" min="2000" max="2099" required />
               </div>
               <div class="mb-3">
-                <label for="dosenPembimbing1" class="form-label">Dosen Pembimbing 1</label>
-                <select class="form-select" id="dosenPembimbing1" required></select>
+                <label for="tanggalSidang" class="form-label">Tanggal Sidang</label>
+                <input type="date" class="form-control" id="tanggalSidang" required />
               </div>
               <div class="mb-3">
-                <label for="dosenPembimbing2" class="form-label">Dosen Pembimbing 2 (Opsional)</label>
-                <select class="form-select" id="dosenPembimbing2"></select>
+                <label for="fileSkripsi" class="form-label">Upload Skripsi Final (PDF)</label>
+                <input type="file" class="form-control" id="fileSkripsi" accept=".pdf" required />
+                <div class="form-text">Maksimal 10MB</div>
               </div>
-              <div class="mb-3">
-                <label for="fileProposal" class="form-label">Upload Proposal</label>
-                <input type="file" class="form-control" id="fileProposal" accept=".pdf,.doc,.docx" required />
-                <div class="form-text">Format file: PDF atau DOC/DOCX (maks. 10MB)</div>
+              <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="approvalCheck" required />
+                <label class="form-check-label" for="approvalCheck">
+                  Saya menyatakan bahwa skripsi yang diupload adalah versi final yang telah disetujui oleh pembimbing dan panitia sidang
+                </label>
               </div>
-
-              <!-- Tombol Cek Similarity -->
-              <div class="similarity-check-container">
-                <button type="button" class="btn btn-warning" id="checkSimilarityBtn">
-                  <i class="fas fa-search"></i> Cek Similarity
-                </button>
-                <div id="similarityCheckResult"></div>
-              </div>
-
-              <button type="submit" class="btn btn-primary mt-3">
-                <i class="fas fa-paper-plane"></i> Ajukan Proposal
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-upload"></i> Upload Skripsi Final
               </button>
             </form>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Modal Hasil Similarity -->
-  <div class="modal fade" id="similarityModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="similarityModalLabel">Hasil Pengecekan Similarity</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> Sistem telah menganalisis judul proposal Anda.
+      <!-- Statistik Section -->
+      <div id="statistikContent" style="display: none;">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">Statistik Skripsi</div>
+              <div class="card-body">
+                <canvas id="skripsiChart"></canvas>
+              </div>
+            </div>
           </div>
-          <div class="similarity-result" id="similarityResult"></div>
-          <div class="mt-3">
-            <h6>Judul-judul yang mirip:</h6>
-            <div id="similarTitlesList"></div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">Status Bimbingan</div>
+              <div class="card-body">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
           </div>
-          <div class="mt-3 recommendation" id="recommendationText"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwQllo0rd_T5OgFQp2-wggqvUfnfMSDN-GoqSmdkbwUnvJQ9r2BJxztR2WRXjT2O9sTvQ/exec';
-    let dosenList = [];
+    // Global Variables
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_0O2ua1tcXEWZu2KOyy_Fq1u9s4LX94wSIaOub537Uy_sC6Oyih5QppNDSBKof7nb/exec';
+    let currentSection = 'pengajuan';
+    let currentMenu = 'bimbingan';
+    let bimbinganData = [];
     let skripsiData = [];
+    let earlyWarningData = [];
+    let dosenList = [];
+    let emailSuggestions = [];
+    let filteredSkripsiData = [];
 
+    // Initialize dashboard
     $(document).ready(function () {
+      initSidebarMenu();
+      loadInitialData();
       initTahunAkademik();
       initDosenOptions();
-      loadSkripsiDataFromServer();
     });
 
+    // Initialize sidebar menu
+    function initSidebarMenu() {
+      $('.main-item').click(function (e) {
+        e.preventDefault();
+        const target = $(this).attr('href').substring(1);
+        $('.content-section').hide();
+        $(`#${target}`).show();
+        $('.sub-item').removeClass('active');
+        $(this).addClass('active');
+        currentSection = target;
+      });
+
+      $('.sub-item').click(function (e) {
+        e.preventDefault();
+        $('.sub-item').removeClass('active');
+        $(this).addClass('active');
+        const target = $(this).attr('href').substring(1);
+        $('.content-section').hide();
+        $(`#${target}`).show();
+        currentSection = target;
+      });
+    }
+
+    // Load initial data
+    function loadInitialData() {
+      $.get(`${scriptUrl}?action=getBimbingan`, function (data) {
+        bimbinganData = data;
+        loadBimbinganTable();
+        updateMainStats();
+      });
+
+      $.get(`${scriptUrl}?action=getSkripsi`, function (data) {
+        skripsiData = data;
+        filteredSkripsiData = data;
+        updateMainStats();
+      });
+
+      $.get(`${scriptUrl}?action=getEarlyWarning`, function (data) {
+        earlyWarningData = data;
+        updateMainStats();
+      });
+    }
+
+    // Initialize tahun akademik
     function initTahunAkademik() {
-      const currentYear = new Date().getFullYear();
-      const select = $('#tahunAkademik');
-      select.empty();
-      for (let i = 4; i >= 0; i--) {
-        const year = `${currentYear - i}/${currentYear - i + 1}`;
-        select.append(`<option value="${year}">${year}</option>`);
+      const year = new Date().getFullYear();
+      for (let i = year - 5; i <= year + 1; i++) {
+        $('#tahunAkademik').append(`<option value="${i}/${i+1}">${i}/${i+1}</option>`);
       }
     }
 
+    // Initialize dosen options
     function initDosenOptions() {
-      const select1 = $('#dosenPembimbing1');
-      const select2 = $('#dosenPembimbing2');
-      select1.empty().append('<option value="">Pilih Dosen Pembimbing 1</option>');
-      select2.empty().append('<option value="">Pilih Dosen Pembimbing 2</option>');
-
-      $.ajax({
-        url: scriptUrl,
-        method: 'GET',
-        data: { action: 'getDosen' },
-        success: function (res) {
-          dosenList = res;
-          res.forEach(dosen => {
-            select1.append(`<option value="${dosen.id}">${dosen.nama}</option>`);
-            select2.append(`<option value="${dosen.id}">${dosen.nama}</option>`);
-          });
-        }
+      dosenList = [
+        { id: 'd1', name: 'Dr. Ahmad, M.Kom' },
+        { id: 'd2', name: 'Prof. Siti, Ph.D' },
+        { id: 'd3', name: 'Dr. Budi, M.Sc' }
+      ];
+      dosenList.forEach(dosen => {
+        $('#dosenPembimbing1').append(`<option value="${dosen.id}">${dosen.name}</option>`);
+        $('#dosenPembimbing2').append(`<option value="${dosen.id}">${dosen.name}</option>`);
       });
     }
 
-    function loadSkripsiDataFromServer() {
-      $.ajax({
-        url: scriptUrl,
-        method: 'GET',
-        data: { action: 'getSkripsiFinal' },
-        success: function (res) {
-          skripsiData = res;
-        }
+    // Load bimbingan table
+    function loadBimbinganTable() {
+      const tableBody = $('#tableBimbingan tbody');
+      tableBody.empty();
+      bimbinganData.forEach(item => {
+        tableBody.append(`
+          <tr>
+            <td>${item.NIM}</td>
+            <td>${item.Nama}</td>
+            <td>${item.Prodi}</td>
+            <td>${item.Pembimbing1}</td>
+            <td>${item.Pembimbing2 || '-'}</td>
+            <td>${item.Judul}</td>
+            <td><span class="badge ${item.Status === 'Selesai' ? 'bg-success' : 'bg-warning'}">${item.Status}</span></td>
+            <td><button class="btn btn-sm btn-info view-detail">Detail</button></td>
+          </tr>
+        `);
       });
     }
 
-    // Cek Similarity
+    // Show notification
+    function showNotification(message, type = 'info') {
+      const toast = $('.toast');
+      const toastBody = $('.toast-body');
+      const header = toast.find('.toast-header');
+      header.removeClass('bg-info bg-success bg-warning bg-danger text-white');
+      toastBody.text(message);
+
+      switch (type) {
+        case 'success': header.addClass('bg-success text-white'); break;
+        case 'warning': header.addClass('bg-warning'); break;
+        case 'error': header.addClass('bg-danger text-white'); break;
+        default: header.addClass('bg-info text-white'); break;
+      }
+
+      const bsToast = new bootstrap.Toast(toast);
+      bsToast.show();
+    }
+
+    // Update main stats
+    function updateMainStats() {
+      $('#totalSkripsiMain').text(skripsiData.length);
+      $('#totalBimbinganMain').text(bimbinganData.length);
+      const selesaiCount = bimbinganData.filter(item => item.Status === 'Selesai').length;
+      $('#selesaiBimbinganMain').text(selesaiCount);
+      $('#earlyWarningMain').text(earlyWarningData.length);
+    }
+
+    // Cek similarity
     function checkSimilarity() {
       const judul = $('#judulProposal').val().trim();
       if (!judul) {
-        showNotification('Masukkan judul terlebih dahulu', 'warning');
+        showNotification('Masukkan judul proposal terlebih dahulu', 'warning');
         return;
       }
 
-      $('#checkSimilarityBtn').html('<span class="spinner-border spinner-border-sm"></span> Mengecek...').prop('disabled', true);
+      $('#checkSimilarityBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengecek...');
+      $('#checkSimilarityBtn').prop('disabled', true);
 
       $.ajax({
         url: scriptUrl,
         method: 'POST',
-        data: { action: 'checkSimilarity', judul: judul },
-        success: function (res) {
-          if (res.result === 'success') {
-            displaySimilarityResult(res.similarity, res.similarTitles, res.recommendation);
-          } else {
-            showNotification('Gagal cek similarity: ' + res.message, 'error');
+        data: {
+          action: 'checkSimilarity',
+          judul: judul
+        },
+        success: function (response) {
+          try {
+            const data = typeof response === 'string' ? JSON.parse(response) : response;
+            if (data.result === 'success') {
+              displaySimilarityResult(data.similarity, data.similarTitles);
+            } else {
+              showNotification('Gagal memeriksa similarity: ' + data.message, 'error');
+            }
+          } catch (e) {
+            showNotification('Respons tidak valid dari server.', 'error');
           }
         },
         error: function () {
-          showNotification('Kesalahan jaringan', 'error');
+          showNotification('Terjadi kesalahan saat memeriksa similarity.', 'error');
         },
         complete: function () {
-          $('#checkSimilarityBtn').html('<i class="fas fa-search"></i> Cek Similarity').prop('disabled', false);
+          $('#checkSimilarityBtn').html('<i class="fas fa-search"></i> Cek Similarity');
+          $('#checkSimilarityBtn').prop('disabled', false);
         }
       });
     }
 
-    function displaySimilarityResult(similarity, similarTitles, recommendation) {
-      let bgClass, textClass, textDesc;
+    // Display similarity result
+    function displaySimilarityResult(similarity, similarTitles) {
+      let similarityClass = 'text-success';
+      let similarityBg = 'similarity-low-bg';
+      let similarityText = 'Rendah';
+
       if (similarity >= 70) {
-        bgClass = 'similarity-high-bg';
-        textClass = 'similarity-high';
-        textDesc = 'Tinggi';
+        similarityClass = 'text-danger';
+        similarityBg = 'similarity-high-bg';
+        similarityText = 'Tinggi';
       } else if (similarity >= 40) {
-        bgClass = 'similarity-medium-bg';
-        textClass = 'similarity-medium';
-        textDesc = 'Sedang';
-      } else {
-        bgClass = 'similarity-low-bg';
-        textClass = 'similarity-low';
-        textDesc = 'Rendah';
+        similarityClass = 'text-warning';
+        similarityBg = 'similarity-medium-bg';
+        similarityText = 'Sedang';
       }
 
+      let message = similarity >= 70
+        ? 'Judul memiliki kemiripan tinggi. Pertimbangkan untuk mengubah judul.'
+        : similarity >= 40
+        ? 'Judul memiliki kemiripan sedang. Tinjau ulang judul yang mirip.'
+        : 'Judul dapat diterima. Kemiripan rendah.';
+
       $('#similarityCheckResult').html(`
-        <div class="similarity-result ${bgClass}">
-          <p class="mb-1">Tingkat Similarity: <span class="${textClass}">${similarity.toFixed(2)}% (${textDesc})</span></p>
+        <div class="similarity-result ${similarityBg}">
+          <p class="mb-1">Tingkat Similarity: <span class="${similarityClass}">${similarity.toFixed(2)}% (${similarityText})</span></p>
+          <p class="mb-0">${message}</p>
         </div>
       `);
 
-      let similarHtml = '';
-      if (similarTitles && similarTitles.length > 0) {
-        similarTitles.forEach(t => {
-          similarHtml += `
-            <div class="mb-2 p-2 border rounded">
-              <div class="fw-bold">${t.Judul}</div>
-              <div class="small">Oleh: ${t.Penulis} (${t.Tahun}) - ${t.Similarity.toFixed(2)}%</div>
-            </div>`;
-        });
-      } else {
-        similarHtml = '<p>Tidak ditemukan judul mirip.</p>';
+      if (similarity >= 40) {
+        let similarTitlesHtml = '';
+        if (similarTitles && similarTitles.length > 0) {
+          similarTitles.forEach(t => {
+            similarTitlesHtml += `
+              <div class="mb-2 p-2 border rounded">
+                <div class="fw-bold">${t.Judul}</div>
+                <div class="small">Oleh: ${t.Penulis} (${t.Tahun}) - Similarity: ${t.Similarity.toFixed(2)}%</div>
+              </div>`;
+          });
+        } else {
+          similarTitlesHtml = '<p>Tidak ditemukan judul yang mirip secara spesifik.</p>';
+        }
+        $('#similarTitlesList').html(similarTitlesHtml);
+        $('#similarityModal').modal('show');
+      }
+    }
+
+    // Event handler for similarity check
+    $('#checkSimilarityBtn').click(function () {
+      checkSimilarity();
+    });
+
+    // Proceed even with high similarity
+    $('#proceedAnywayBtn').click(function () {
+      $('#similarityModal').modal('hide');
+      $('#pengajuanProposalForm').off('submit').submit();
+    });
+
+    // Handle proposal submission
+    $('#pengajuanProposalForm').submit(function (e) {
+      e.preventDefault();
+      const judul = $('#judulProposal').val().trim();
+      const similarity = $('#similarityCheckResult .text-danger, #similarityCheckResult .text-warning').length;
+      if (similarity > 0) {
+        $('#similarityModal').modal('show');
+        return;
       }
 
-      $('#similarityResult').html(`<p>Tingkat kemiripan: <strong>${similarity.toFixed(2)}%</strong></p>`);
-      $('#similarTitlesList').html(similarHtml);
-      $('#recommendationText').html(`<strong>Rekomendasi: ${recommendation}</strong>`);
+      const nim = $('#nimProposal').val();
+      const nama = $('#namaProposal').val();
+      const prodi = $('#prodiProposal').val();
+      const tahunAkademik = $('#tahunAkademik').val();
+      const dosenPembimbing1 = $('#dosenPembimbing1').val();
+      const dosenPembimbing1Nama = $('#dosenPembimbing1 option:selected').text();
+      const dosenPembimbing2 = $('#dosenPembimbing2').val();
+      const dosenPembimbing2Nama = $('#dosenPembimbing2 option:selected').text();
+      const fileInput = $('#fileProposal')[0];
 
-      $('#similarityModal').modal('show');
-    }
+      if (!nim || !nama || !prodi || !tahunAkademik || !judul || !dosenPembimbing1 || !fileInput.files[0]) {
+        showNotification('Harap lengkapi semua field yang wajib diisi', 'warning');
+        return;
+      }
 
-    $('#checkSimilarityBtn').click(checkSimilarity);
+      const file = fileInput.files[0];
+      if (file.size > 10 * 1024 * 1024) {
+        showNotification('Ukuran file terlalu besar. Maksimal 10MB.', 'warning');
+        return;
+      }
 
-    function showNotification(message, type) {
-      const toast = $('.notification-toast');
-      toast.find('.toast-body').text(message);
-      toast.removeClass('text-bg-success text-bg-warning text-bg-danger');
-      toast.addClass(type === 'success' ? 'text-bg-success' : type === 'warning' ? 'text-bg-warning' : 'text-bg-danger');
-      toast.toast('show');
-    }
+      const submitBtn = $(this).find('button[type="submit"]');
+      const originalText = submitBtn.html();
+      submitBtn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupload...').prop('disabled', true);
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        const base64 = reader.result.split(',')[1];
+        const formData = new FormData();
+        formData.append('action', 'uploadProposal');
+        formData.append('nim', nim);
+        formData.append('nama', nama);
+        formData.append('prodi', prodi);
+        formData.append('tahunAkademik', tahunAkademik);
+        formData.append('judul', judul);
+        formData.append('dosenPembimbing1', dosenPembimbing1);
+        formData.append('dosenPembimbing1Nama', dosenPembimbing1Nama);
+        formData.append('dosenPembimbing2', dosenPembimbing2 || '');
+        formData.append('dosenPembimbing2Nama', dosenPembimbing2Nama || '');
+        formData.append('filename', file.name);
+        formData.append('mimeType', file.type);
+        formData.append('file', base64);
+
+        fetch(scriptUrl, {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.result === 'success') {
+              showNotification('Proposal berhasil diajukan!', 'success');
+              $('#pengajuanProposalForm')[0].reset();
+              loadInitialData();
+            } else {
+              showNotification('Terjadi kesalahan: ' + data.message, 'error');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showNotification('Terjadi kesalahan saat mengajukan proposal.', 'error');
+          })
+          .finally(() => {
+            submitBtn.html(originalText).prop('disabled', false);
+          });
+      };
+    });
   </script>
 </body>
-
 </html>
