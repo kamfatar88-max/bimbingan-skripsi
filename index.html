@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <style>
         :root {
             --primary-color: #3498db;
@@ -19,8 +18,9 @@
             --light-color: #ecf0f1;
             --success-color: #27ae60;
             --warning-color: #f39c12;
+            --info-color: #1abc9c;
+            --stat-card-padding: 15px;
         }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
@@ -28,7 +28,6 @@
             padding: 0;
             min-height: 100vh;
         }
-        
         /* Sidebar Styling */
         #sidebar {
             min-height: 100vh;
@@ -38,238 +37,220 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
             z-index: 1000;
         }
-        
         #sidebar .sidebar-header {
             padding: 20px;
             background-color: var(--primary-color);
         }
-        
         #sidebar ul li a {
-            padding: 15px 25px;
+            padding: 12px 20px;
             display: block;
             color: #ddd;
             text-decoration: none;
             transition: all 0.3s;
-            border-left: 4px solid transparent;
+            border-left: 3px solid transparent;
+            font-size: 0.9rem;
         }
-        
         #sidebar ul li a:hover {
             background-color: rgba(255,255,255,0.1);
             color: white;
-            border-left: 4px solid var(--primary-color);
+            border-left: 3px solid var(--primary-color);
         }
-        
         #sidebar ul li a.active {
             background-color: rgba(255,255,255,0.2);
             color: white;
-            border-left: 4px solid var(--primary-color);
+            border-left: 3px solid var(--primary-color);
         }
-        
         #sidebar ul li a i {
-            margin-right: 10px;
-            width: 20px;
+            margin-right: 8px;
+            width: 18px;
             text-align: center;
+            font-size: 0.95em;
         }
-        
         #sidebar .sub-menu {
-            padding-left: 30px;
+            padding-left: 25px;
             background-color: rgba(0,0,0,0.2);
             display: none;
         }
-        
         #sidebar .sub-menu a {
-            padding: 12px 20px;
-            font-size: 0.9em;
+            padding: 10px 15px;
+            font-size: 0.85em;
         }
-        
         #sidebar .sub-menu.show {
             display: block;
         }
-        
         /* Content Styling */
         #content {
             width: 100%;
             min-height: 100vh;
             transition: all 0.3s;
-            padding: 20px;
+            padding: 15px;
         }
-        
         .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 15px;
             border: none;
         }
-        
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12);
         }
-        
         .card-header {
             background-color: var(--primary-color);
             color: white;
-            border-radius: 10px 10px 0 0 !important;
+            border-radius: 8px 8px 0 0 !important;
             font-weight: 600;
+            padding: 10px 15px;
+            font-size: 1.1rem;
         }
-        
         .table-hover tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.1);
+            background-color: rgba(52, 152, 219, 0.08);
         }
-        
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
         }
-        
         .btn-primary:hover {
             background-color: #2980b9;
             border-color: #2980b9;
         }
-        
         .badge-success {
             background-color: var(--success-color);
         }
-        
         .badge-warning {
             background-color: var(--warning-color);
         }
-        
         .badge-danger {
             background-color: var(--accent-color);
         }
-        
         .tab-content {
-            padding: 20px;
+            padding: 15px;
             border: 1px solid #ddd;
             border-top: none;
             border-radius: 0 0 5px 5px;
         }
-        
         .nav-tabs .nav-link.active {
             font-weight: bold;
-            border-bottom: 3px solid var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
         }
-        
         /* Dashboard Stats */
         .stat-card {
             text-align: center;
-            padding: 20px;
+            padding: var(--stat-card-padding);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            border-radius: 6px;
+            background: white;
+            border: 1px solid #eee;
         }
-        
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        
         .stat-card i {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--primary-color);
         }
-        
         .stat-card h2 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            margin: 0;
+            margin: 5px 0;
+            line-height: 1.2;
         }
-        
         .stat-card p {
-            color: #6c757d;
+            color: #777;
+            font-size: 0.85rem;
             margin: 0;
         }
-        
         /* Main Dashboard Stats */
         .main-stat-card {
             text-align: center;
-            padding: 25px;
+            padding: var(--stat-card-padding);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             height: 100%;
+            border-radius: 6px;
+            background: white;
+            border: 1px solid #eee;
         }
-        
         .main-stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        
         .main-stat-card i {
-            font-size: 3rem;
-            margin-bottom: 15px;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            opacity: 0.9;
         }
-        
         .main-stat-card h2 {
-            font-size: 2.5rem;
+            font-size: 1.7rem;
             font-weight: bold;
-            margin: 0;
+            margin: 3px 0;
+            line-height: 1.2;
         }
-        
         .main-stat-card h5 {
-            margin-top: 10px;
+            margin-top: 5px;
             font-weight: 600;
+            font-size: 0.95rem;
+            color: #555;
         }
-        
         .main-stat-card p {
-            color: #6c757d;
+            color: #888;
             margin: 0;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
-        
         /* Form Styling */
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        .form-control {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.9rem;
+            height: calc(1.8em + 0.8rem + 2px);
         }
-        
+        .form-label {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+        .form-text {
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+        }
+        .select2-container .select2-selection--single {
+            height: calc(1.8em + 0.8rem + 2px);
+            padding: 0.4rem 0.75rem;
+        }
+        .card-body {
+            padding: 15px;
+        }
         /* Warning styling for Early Warning */
         .early-warning {
             background-color: #fff3cd;
-            border-left: 4px solid var(--warning-color);
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
+            border-left: 3px solid var(--warning-color);
+            padding: 10px 15px;
+            margin-bottom: 12px;
+            border-radius: 3px;
+            font-size: 0.85rem;
         }
-        
-        /* Similarity warning */
-        .similarity-high {
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-        
-        .similarity-medium {
-            color: var(--warning-color);
-            font-weight: bold;
-        }
-        
-        .similarity-low {
-            color: var(--success-color);
-            font-weight: bold;
-        }
-        
         /* Loading spinner */
         .spinner-border {
-            width: 3rem; 
-            height: 3rem;
+            width: 1.8rem; 
+            height: 1.8rem;
             color: var(--primary-color);
         }
-        
         /* Autofill styling */
         .autofill-option {
-            padding: 8px 12px;
+            padding: 6px 10px;
             cursor: pointer;
             border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
         }
-        
         .autofill-option:hover {
             background-color: #f8f9fa;
         }
-        
         .autofill-container {
             position: relative;
         }
-        
         .autofill-suggestions {
             position: absolute;
             top: 100%;
@@ -279,48 +260,78 @@
             border: 1px solid #ddd;
             border-top: none;
             border-radius: 0 0 4px 4px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 1000;
             display: none;
+            max-height: 150px;
+            overflow-y: auto;
         }
-        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #sidebar {
+                min-width: 60px;
+                max-width: 60px;
+                text-align: center;
+            }
+            #sidebar .sidebar-header h3 {
+                display: none;
+            }
+            #sidebar ul li a {
+                padding: 12px 3px;
+                font-size: 0.75em;
+            }
+            #sidebar ul li a i {
+                margin-right: 0;
+                display: block;
+                font-size: 1.2em;
+                margin-bottom: 3px;
+            }
+            #sidebar ul li a span {
+                display: none;
+            }
+            #sidebar .sub-menu {
+                padding-left: 0;
+            }
+            #content {
+                width: calc(100% - 60px);
+                padding: 10px;
+            }
+        }
         /* Notification styling */
         .notification-toast {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1050;
-            min-width: 300px;
+            min-width: 280px;
         }
-        
         /* Modal Styling */
         .modal-content {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
-        
         .modal-header {
             background-color: var(--primary-color);
             color: white;
-            border-radius: 10px 10px 0 0;
+            border-radius: 8px 8px 0 0;
+            padding: 12px 20px;
         }
-        
+        .modal-title {
+            font-size: 1.1rem;
+        }
         .btn-close {
             filter: invert(1);
         }
-        
         /* Email suggestions styling */
         .email-suggestion {
-            padding: 8px 12px;
+            padding: 6px 10px;
             cursor: pointer;
             border-bottom: 1px solid #eee;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
-        
         .email-suggestion:hover {
             background-color: #f8f9fa;
         }
-        
         .email-suggestions {
             position: absolute;
             top: 100%;
@@ -330,103 +341,168 @@
             border: 1px solid #ddd;
             border-top: none;
             border-radius: 0 0 4px 4px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 1000;
             display: none;
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
         }
-
         /* Similarity Check Styling */
         .similarity-check-container {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 5px;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 4px;
             background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
+            border: 1px solid #e9ecef;
+            border-left: 3px solid var(--primary-color);
         }
-
         .similarity-result {
-            margin-top: 10px;
+            margin-top: 8px;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 4px;
+            font-size: 0.9rem;
         }
-
         .similarity-high-bg {
             background-color: #ffeaea;
             border: 1px solid #f5c6cb;
         }
-
         .similarity-medium-bg {
             background-color: #fff3cd;
             border: 1px solid #ffeaa7;
         }
-
         .similarity-low-bg {
             background-color: #d4edda;
             border: 1px solid #c3e6cb;
         }
-        
         /* Similarity progress bar */
         .similarity-progress {
-            height: 20px;
-            margin-top: 10px;
-            border-radius: 5px;
+            height: 16px;
+            margin-top: 8px;
+            border-radius: 3px;
             overflow: hidden;
+            background-color: #e9ecef;
         }
-        
         .similarity-progress-bar {
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
+            font-weight: 500;
+            font-size: 0.75rem;
         }
-
-        /* Responsive adjustments */
+        /* Similarity recommendation */
+        .similarity-recommendation {
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .recommendation-accepted {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--success-color);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        .recommendation-revised {
+            background-color: rgba(241, 196, 15, 0.15);
+            color: var(--warning-color);
+            border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+        .recommendation-rejected {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--accent-color);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+        /* Tabel Detail Proposal */
+        .detail-proposal-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .detail-proposal-table th {
+            background-color: #f8f9fa;
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+            width: 30%;
+            font-weight: 500;
+        }
+        .detail-proposal-table td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .detail-proposal-table tr:last-child th,
+        .detail-proposal-table tr:last-child td {
+            border-bottom: none;
+        }
+        /* Similarity result list */
+        .similarity-list {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border-radius: 4px;
+        }
+        .similarity-list-item {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+        }
+        .similarity-list-item:last-child {
+            border-bottom: none;
+        }
+        .similarity-list-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+            color: #2c3e50;
+        }
+        .similarity-list-meta {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+        }
+        .similarity-percentage {
+            display: inline-block;
+            background-color: #e0e0e0;
+            color: #555;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            margin-left: 5px;
+            font-weight: 500;
+        }
+        .similarity-high .similarity-percentage {
+            background-color: #ffeaea;
+            color: var(--accent-color);
+        }
+        .similarity-medium .similarity-percentage {
+            background-color: #fff3cd;
+            color: var(--warning-color);
+        }
+        .similarity-low .similarity-percentage {
+            background-color: #d4edda;
+            color: var(--success-color);
+        }
+        /* Form group spacing */
+        .mb-3 {
+            margin-bottom: 0.8rem !important;
+        }
+        /* Button styling */
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        /* Google Form Container */
+        .google-form-container {
+            border: none;
+            width: 100%;
+            height: 800px;
+        }
+        /* Responsive iframe */
         @media (max-width: 768px) {
-            #sidebar {
-                min-width: 80px;
-                max-width: 80px;
-                text-align: center;
-            }
-            
-            #sidebar .sidebar-header h3 {
-                display: none;
-            }
-            
-            #sidebar ul li a {
-                padding: 15px 5px;
-                font-size: 0.85em;
-            }
-            
-            #sidebar ul li a i {
-                margin-right: 0;
-                display: block;
-                font-size: 1.5em;
-                margin-bottom: 5px;
-            }
-            
-            #sidebar ul li a span {
-                display: block;
-            }
-            
-            #sidebar .sub-menu {
-                padding-left: 0;
-            }
-            
-            #content {
-                width: calc(100% - 80px);
-            }
-            
-            .main-stat-card {
-                margin-bottom: 15px;
-            }
-            
-            /* Responsive iframe */
-            .google-form-container iframe {
-                height: 1200px !important;
+            .google-form-container {
+                height: 600px !important;
             }
         }
     </style>
@@ -440,7 +516,6 @@
         </div>
         <div class="toast-body"></div>
     </div>
-
     <!-- Modal for Bimbingan Details -->
     <div class="modal fade" id="bimbinganDetailModal" tabindex="-1" aria-labelledby="bimbinganDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -455,15 +530,14 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Modal for Edit Status -->
     <div class="modal fade" id="editStatusModal" tabindex="-1" aria-labelledby="editStatusModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editStatusModalLabel">Ubah Status Bimbingan</h5>
@@ -474,7 +548,7 @@
                         <input type="hidden" id="editNim" name="nim">
                         <div class="mb-3">
                             <label for="statusSelect" class="form-label">Status Bimbingan</label>
-                            <select class="form-select" id="statusSelect" name="status" required>
+                            <select class="form-select form-select-sm" id="statusSelect" name="status" required>
                                 <option value="Dalam Proses">Dalam Proses</option>
                                 <option value="Selesai">Selesai</option>
                                 <option value="Terlambat">Terlambat</option>
@@ -483,16 +557,15 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" id="saveStatusBtn">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="saveStatusBtn">Simpan</button>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Modal for Send Notification -->
     <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="notificationModalLabel">Kirim Notifikasi</h5>
@@ -504,29 +577,27 @@
                         <div class="mb-3">
                             <label for="recipientEmail" class="form-label">Email Penerima</label>
                             <div class="autofill-container">
-                                <input type="email" class="form-control" id="recipientEmail" required placeholder="Masukkan alamat email">
+                                <input type="email" class="form-control form-control-sm" id="recipientEmail" required placeholder="Masukkan email">
                                 <div class="email-suggestions" id="emailSuggestions"></div>
                             </div>
-                            <div class="form-text">Email akan dikirim ke alamat ini</div>
                         </div>
                         <div class="mb-3">
                             <label for="notifSubject" class="form-label">Subjek Email</label>
-                            <input type="text" class="form-control" id="notifSubject" value="Peringatan Early Warning Bimbingan Skripsi" required>
+                            <input type="text" class="form-control form-control-sm" id="notifSubject" value="Peringatan Early Warning" required>
                         </div>
                         <div class="mb-3">
-                            <label for="notifMessage" class="form-label">Pesan Notifikasi</label>
-                            <textarea class="form-control" id="notifMessage" rows="4" placeholder="Tulis pesan notifikasi di sini..." required></textarea>
+                            <label for="notifMessage" class="form-label">Pesan</label>
+                            <textarea class="form-control form-control-sm" id="notifMessage" rows="3" required></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" id="sendNotificationBtn">Kirim Notifikasi</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="sendNotificationBtn">Kirim</button>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Modal for Skripsi Details -->
     <div class="modal fade" id="skripsiDetailModal" tabindex="-1" aria-labelledby="skripsiDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -541,54 +612,91 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <a id="downloadSkripsiBtn" href="#" target="_blank" class="btn btn-primary">
-                        <i class="fas fa-download"></i> Download Skripsi
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <a id="downloadSkripsiBtn" href="#" target="_blank" class="btn btn-sm btn-primary">
+                        <i class="fas fa-download"></i> Download
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Modal for Similarity Check -->
     <div class="modal fade" id="similarityModal" tabindex="-1" aria-labelledby="similarityModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="similarityModalLabel">Hasil Pengecekan Similarity</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> Sistem telah menganalisis judul proposal Anda dan membandingkannya dengan database skripsi yang ada.
-                    </div>
-                    
-                    <div class="similarity-result" id="similarityResult">
-                        <!-- Hasil similarity akan ditampilkan di sini -->
-                    </div>
-                    
-                    <div class="mt-3">
-                        <h6>Judul-judul yang mirip:</h6>
-                        <div id="similarTitlesList" class="mt-2">
-                            <!-- Daftar judul yang mirip akan ditampilkan di sini -->
-                        </div>
+                    <div class="similarity-result-container">
+                        <div id="similarityResult" class="mb-3"></div>
+                        <div class="similarity-list" id="similarTitlesList"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" id="proceedAnywayBtn">Lanjutkan Anyway</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="proceedAnywayBtn">Lanjutkan</button>
                 </div>
             </div>
         </div>
     </div>
-
+    <!-- View Proposal Modal -->
+    <div class="modal fade" id="viewProposalModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">Detail Proposal Skripsi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="viewProposalContent">
+                    <table class="table detail-proposal-table">
+                        <tr>
+                            <th>NIM</th>
+                            <td id="viewNim"></td>
+                        </tr>
+                        <tr>
+                            <th>Nama</th>
+                            <td id="viewNama"></td>
+                        </tr>
+                        <tr>
+                            <th>Program Studi</th>
+                            <td id="viewProdi"></td>
+                        </tr>
+                        <tr>
+                            <th>Tahun Akademik</th>
+                            <td id="viewTahunAkademik"></td>
+                        </tr>
+                        <tr>
+                            <th>Judul Proposal</th>
+                            <td id="viewJudul"></td>
+                        </tr>
+                        <tr>
+                            <th>Pembimbing 1</th>
+                            <td id="viewPembimbing1"></td>
+                        </tr>
+                        <tr>
+                            <th>Pembimbing 2</th>
+                            <td id="viewPembimbing2"></td>
+                        </tr>
+                        <tr>
+                            <th>File Proposal</th>
+                            <td id="viewFile"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <div class="bg-dark" id="sidebar">
             <div class="sidebar-header">
                 <h3 class="m-0">eSIBiS</h3>
             </div>
-            
             <ul class="list-unstyled">
                 <li>
                     <a href="#bimbinganSubmenu" data-bs-toggle="collapse" class="dropdown-toggle active">
@@ -628,7 +736,6 @@
                         </li>
                     </ul>
                 </li>
-                
                 <li>
                     <a href="#skripsiSubmenu" data-bs-toggle="collapse" class="dropdown-toggle">
                         <i class="fas fa-book"></i>
@@ -649,7 +756,6 @@
                         </li>
                     </ul>
                 </li>
-                
                 <li>
                     <a href="#statistik" class="main-item">
                         <i class="fas fa-chart-bar"></i>
@@ -658,46 +764,44 @@
                 </li>
             </ul>
         </div>
-
         <!-- Page Content -->
         <div id="content">
             <div class="container-fluid">
                 <!-- Main Dashboard Stats -->
-                <div class="row mb-4" id="mainDashboardStats">
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <div class="card main-stat-card bg-primary text-white" data-target="databaseSkripsi">
-                            <i class="fas fa-book"></i>
+                <div class="row mb-3" id="mainDashboardStats">
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <div class="card main-stat-card" data-target="databaseSkripsi">
+                            <i class="fas fa-book text-info"></i>
                             <h2 id="totalSkripsiMain">0</h2>
                             <h5>Total Skripsi</h5>
                             <p>Seluruh judul skripsi</p>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <div class="card main-stat-card bg-info text-white" data-target="dataBimbingan">
-                            <i class="fas fa-graduation-cap"></i>
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <div class="card main-stat-card" data-target="dataBimbingan">
+                            <i class="fas fa-graduation-cap text-primary"></i>
                             <h2 id="totalBimbinganMain">0</h2>
                             <h5>Total Bimbingan</h5>
                             <p>Mahasiswa dalam bimbingan</p>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <div class="card main-stat-card bg-success text-white" data-target="statusBimbingan">
-                            <i class="fas fa-check-circle"></i>
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <div class="card main-stat-card" data-target="statusBimbingan">
+                            <i class="fas fa-check-circle text-success"></i>
                             <h2 id="selesaiBimbinganMain">0</h2>
                             <h5>Selesai</h5>
                             <p>Bimbingan telah selesai</p>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <div class="card main-stat-card bg-warning text-white" data-target="earlyWarning">
-                            <i class="fas fa-exclamation-triangle"></i>
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <div class="card main-stat-card" data-target="earlyWarning">
+                            <i class="fas fa-exclamation-triangle text-warning"></i>
                             <h2 id="earlyWarningMain">0</h2>
                             <h5>Early Warning</h5>
                             <p>Perlu perhatian khusus</p>
                         </div>
                     </div>
                 </div>
-                
                 <!-- Bimbingan Section -->
                 <div id="bimbinganContent">
                     <!-- Pengajuan Proposal -->
@@ -707,97 +811,102 @@
                                 <h5 class="card-title mb-0">Pengajuan Proposal Skripsi</h5>
                             </div>
                             <div class="card-body">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> Pastikan proposal telah melalui konsultasi dengan calon pembimbing sebelum diajukan.
+                                <div class="alert alert-info alert-sm p-2 mb-3">
+                                    <i class="fas fa-info-circle"></i> Pastikan proposal telah melalui konsultasi dengan Dosen Penasehat sebelum diajukan.
                                 </div>
-                                
                                 <form id="pengajuanProposalForm">
-                                    <div class="mb-3">
-                                        <label for="nimProposal" class="form-label">NIM</label>
-                                        <input type="text" class="form-control" id="nimProposal" required>
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="nimProposal" class="form-label">NIM</label>
+                                                <input type="text" class="form-control form-control-sm" id="nimProposal" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="namaProposal" class="form-label">Nama Lengkap</label>
+                                                <input type="text" class="form-control form-control-sm" id="namaProposal" required>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="namaProposal" class="form-label">Nama Lengkap</label>
-                                        <input type="text" class="form-control" id="namaProposal" required>
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="prodiProposal" class="form-label">Program Studi</label>
+                                                <select class="form-select form-select-sm" id="prodiProposal" required>
+                                                    <option value="">Pilih Program Studi</option>
+                                                    <option value="ES">Ekonomi Syariah</option>
+                                                    <option value="PS">Perbankan Syariah</option>
+                                                    <option value="MBS">Manajemen Bisnis Syariah</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="tahunAkademik" class="form-label">Tahun Akademik</label>
+                                                <select class="form-select form-select-sm" id="tahunAkademik" required>
+                                                    <option value="">Pilih Tahun Akademik</option>
+                                                    <!-- Options akan diisi oleh JavaScript -->
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="prodiProposal" class="form-label">Program Studi</label>
-                                        <select class="form-select" id="prodiProposal" required>
-                                            <option value="">Pilih Program Studi</option>
-                                            <option value="ES">Ekonomi Syariah</option>
-                                            <option value="PS">Perbankan Syariah</option>
-                                            <option value="MBS">Manajemen Bisnis Syariah</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="tahunAkademik" class="form-label">Tahun Akademik</label>
-                                        <select class="form-select" id="tahunAkademik" required>
-                                            <option value="">Pilih Tahun Akademik</option>
-                                            <!-- Options akan diisi oleh JavaScript -->
-                                        </select>
-                                    </div>
-                                    
                                     <div class="mb-3">
                                         <label for="judulProposal" class="form-label">Judul Proposal</label>
-                                        <textarea class="form-control" id="judulProposal" rows="3" required></textarea>
+                                        <textarea class="form-control form-control-sm" id="judulProposal" rows="2" required></textarea>
                                         <div class="form-text">Gunakan format yang jelas dan sesuai dengan kaidah penulisan ilmiah</div>
                                     </div>
-
-                                    <!-- Similarity Check Section -->
                                     <div class="similarity-check-container">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h6 class="mb-0">Pengecekan Similarity Judul</h6>
                                             <button type="button" class="btn btn-sm btn-outline-primary" id="checkSimilarityBtn">
-                                                <i class="fas fa-search"></i> Cek Similarity
+                                                <i class="fas fa-search"></i> Cek
                                             </button>
                                         </div>
-                                        <div id="similarityCheckResult" class="mt-2">
-                                            <!-- Hasil pengecekan similarity akan ditampilkan di sini -->
+                                        <div id="similarityCheckResult" class="mt-2"></div>
+                                        <div id="recommendation" class="mt-2"></div>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="dosenPembimbing1" class="form-label">Pembimbing 1</label>
+                                                <select class="form-select form-select-sm" id="dosenPembimbing1" required>
+                                                    <option value="">Pilih Pembimbing 1</option>
+                                                    <!-- Options akan diisi oleh JavaScript -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="dosenPembimbing2" class="form-label">Pembimbing 2</label>
+                                                <select class="form-select form-select-sm" id="dosenPembimbing2">
+                                                    <option value="">Pilih Pembimbing 2</option>
+                                                    <!-- Options akan diisi oleh JavaScript -->
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="dosenPembimbing1" class="form-label">Dosen Pembimbing 1</label>
-                                        <select class="form-select" id="dosenPembimbing1" required>
-                                            <option value="">Pilih Dosen Pembimbing 1</option>
-                                            <!-- Options akan diisi oleh JavaScript -->
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="dosenPembimbing2" class="form-label">Dosen Pembimbing 2 (opsional)</label>
-                                        <select class="form-select" id="dosenPembimbing2">
-                                            <option value="">Pilih Dosen Pembimbing 2 (jika diperlukan)</option>
-                                            <!-- Options akan diisi oleh JavaScript -->
-                                        </select>
-                                    </div>
-                                    
                                     <div class="mb-3">
                                         <label for="fileProposal" class="form-label">Upload Proposal</label>
-                                        <input type="file" class="form-control" id="fileProposal" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" class="form-control form-control-sm" id="fileProposal" accept=".pdf,.doc,.docx" required>
                                         <div class="form-text">Format file: PDF atau DOC/DOCX (maks. 10MB)</div>
                                     </div>
-                                    
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-sm btn-primary">
                                         <i class="fas fa-paper-plane"></i> Ajukan Proposal
                                     </button>
                                 </form>
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Data Bimbingan -->
                     <div class="content-section" id="dataBimbingan" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Data Bimbingan Skripsi</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-2">
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="tableBimbingan">
+                                    <table class="table table-hover table-sm" id="tableBimbingan">
                                         <thead>
                                             <tr>
                                                 <th>NIM</th>
@@ -818,23 +927,21 @@
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Tahap Bimbingan -->
                     <div class="content-section" id="tahapBimbingan" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Tahap Bimbingan Skripsi</h5>
                             </div>
-                            <div class="card-body">
-                                <div class="progress mb-4" style="height: 30px;">
+                            <div class="card-body p-2">
+                                <div class="progress mb-3" style="height: 20px;">
                                     <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Pengajuan Judul</div>
                                     <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Bimbingan Proposal</div>
                                     <div class="progress-bar bg-info" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Seminar Hasil</div>
                                     <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Bimbingan Skripsi</div>
                                 </div>
-                                
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="tableTahapBimbingan">
+                                    <table class="table table-hover table-sm" id="tableTahapBimbingan">
                                         <thead>
                                             <tr>
                                                 <th>NIM</th>
@@ -853,37 +960,36 @@
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Status Bimbingan -->
                     <div class="content-section" id="statusBimbingan" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Status Bimbingan Skripsi</h5>
                             </div>
-                            <div class="card-body">
-                                <div class="row mb-4">
-                                    <div class="col-md-3">
+                            <div class="card-body p-2">
+                                <div class="row mb-3">
+                                    <div class="col-md-3 col-sm-6 mb-2">
                                         <div class="card stat-card">
                                             <i class="fas fa-users"></i>
                                             <h2 id="totalBimbingan">0</h2>
                                             <p>Total Bimbingan</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 col-sm-6 mb-2">
                                         <div class="card stat-card">
                                             <i class="fas fa-check-circle"></i>
                                             <h2 id="selesaiBimbingan">0</h2>
                                             <p>Selesai</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 col-sm-6 mb-2">
                                         <div class="card stat-card">
                                             <i class="fas fa-spinner"></i>
                                             <h2 id="prosesBimbingan">0</h2>
                                             <p>Dalam Proses</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 col-sm-6 mb-2">
                                         <div class="card stat-card">
                                             <i class="fas fa-exclamation-triangle"></i>
                                             <h2 id="terlambatBimbingan">0</h2>
@@ -891,9 +997,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="tableStatusBimbingan">
+                                    <table class="table table-hover table-sm" id="tableStatusBimbingan">
                                         <thead>
                                             <tr>
                                                 <th>NIM</th>
@@ -914,21 +1019,19 @@
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Early Warning -->
                     <div class="content-section" id="earlyWarning" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Early Warning System</h5>
                             </div>
-                            <div class="card-body">
-                                <div class="alert alert-warning">
+                            <div class="card-body p-2">
+                                <div class="alert alert-warning alert-sm p-2 mb-3">
                                     <i class="fas fa-exclamation-triangle"></i> 
                                     Sistem ini memberikan peringatan dini kepada mahasiswa semester 11-14 yang belum menyelesaikan skripsi.
                                 </div>
-                                
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="tableEarlyWarning">
+                                    <table class="table table-hover table-sm" id="tableEarlyWarning">
                                         <thead>
                                             <tr>
                                                 <th>NIM</th>
@@ -949,7 +1052,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <!-- Skripsi Section -->
                 <div id="skripsiContent" style="display: none;">
                     <!-- Database Skripsi -->
@@ -958,18 +1060,18 @@
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Database Skripsi</h5>
                             </div>
-                            <div class="card-body">
-                                <div class="row mb-3">
+                            <div class="card-body p-2">
+                                <div class="row g-2 mb-2">
                                     <div class="col-md-3">
                                         <label for="filterTahun" class="form-label">Tahun Lulus</label>
-                                        <select class="form-select" id="filterTahun">
+                                        <select class="form-select form-select-sm" id="filterTahun">
                                             <option value="">Semua Tahun</option>
                                             <!-- Options will be populated by JavaScript -->
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="filterProdi" class="form-label">Program Studi</label>
-                                        <select class="form-select" id="filterProdi">
+                                        <select class="form-select form-select-sm" id="filterProdi">
                                             <option value="">Semua Program Studi</option>
                                             <option value="ES">Ekonomi Syariah</option>
                                             <option value="PS">Perbankan Syariah</option>
@@ -978,7 +1080,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <label for="filterStatus" class="form-label">Status</label>
-                                        <select class="form-select" id="filterStatus">
+                                        <select class="form-select form-select-sm" id="filterStatus">
                                             <option value="">Semua Status</option>
                                             <option value="Lulus">Lulus</option>
                                             <option value="Proses">Dalam Proses</option>
@@ -986,17 +1088,16 @@
                                     </div>
                                     <div class="col-md-3">
                                         <label for="searchJudul" class="form-label">Pencarian Judul</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="searchJudul" placeholder="Cari judul...">
-                                            <button class="btn btn-primary" type="button" id="btnSearch">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control form-control-sm" id="searchJudul" placeholder="Cari judul...">
+                                            <button class="btn btn-sm btn-primary" type="button" id="btnSearch">
                                                 <i class="fas fa-search"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="tableSkripsi">
+                                    <table class="table table-hover table-sm" id="tableSkripsi">
                                         <thead>
                                             <tr>
                                                 <th>Judul</th>
@@ -1017,74 +1118,102 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Upload Skripsi Final -->
+                    <!-- Upload Skripsi Final - DITAMBAHKAN KOLOM PEMBIMBING -->
                     <div class="content-section" id="uploadSkripsi" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Upload Skripsi Final</h5>
                             </div>
-                            <div class="card-body">
-                                <div class="alert alert-info">
+                            <div class="card-body p-2">
+                                <div class="alert alert-info alert-sm p-2 mb-3">
                                     <i class="fas fa-info-circle"></i> 
                                     Upload skripsi final yang telah disetujui oleh pembimbing dan telah melalui proses sidang.
                                 </div>
-                                
                                 <form id="uploadSkripsiForm">
-                                    <div class="mb-3 autofill-container">
-                                        <label for="nimSkripsi" class="form-label">NIM</label>
-                                        <input type="text" class="form-control" id="nimSkripsi" required>
-                                        <div class="autofill-suggestions" id="nimSuggestions"></div>
+                                    <div class="row g-2">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="mb-3">
+                                                <label for="nimSkripsi" class="form-label">NIM</label>
+                                                <div class="autofill-container">
+                                                    <input type="text" class="form-control form-control-sm" id="nimSkripsi" required>
+                                                    <div class="autofill-suggestions" id="nimSuggestions"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="mb-3">
+                                                <label for="namaSkripsi" class="form-label">Nama Lengkap</label>
+                                                <input type="text" class="form-control form-control-sm" id="namaSkripsi" required>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="namaSkripsi" class="form-label">Nama Lengkap</label>
-                                        <input type="text" class="form-control" id="namaSkripsi" required>
+                                    <div class="row g-2">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="mb-3">
+                                                <label for="prodiSkripsi" class="form-label">Program Studi</label>
+                                                <select class="form-select form-select-sm" id="prodiSkripsi" required>
+                                                    <option value="">Pilih Program Studi</option>
+                                                    <option value="ES">Ekonomi Syariah</option>
+                                                    <option value="PS">Perbankan Syariah</option>
+                                                    <option value="MBS">Manajemen Bisnis Syariah</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="mb-3">
+                                                <label for="tahunLulus" class="form-label">Tahun Lulus</label>
+                                                <select class="form-select form-select-sm" id="tahunLulus" required>
+                                                    <option value="">Pilih Tahun Lulus</option>
+                                                    <!-- Options will be populated by JavaScript -->
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="prodiSkripsi" class="form-label">Program Studi</label>
-                                        <select class="form-select" id="prodiSkripsi" required>
-                                            <option value="">Pilih Program Studi</option>
-                                            <option value="ES">Ekonomi Syariah</option>
-                                            <option value="PS">Perbankan Syariah</option>
-                                            <option value="MBS">Manajemen Bisnis Syariah</option>
-                                        </select>
-                                    </div>
-                                    
                                     <div class="mb-3">
                                         <label for="judulSkripsiFinal" class="form-label">Judul Skripsi Final</label>
-                                        <textarea class="form-control" id="judulSkripsiFinal" rows="2" required></textarea>
+                                        <textarea class="form-control form-control-sm" id="judulSkripsiFinal" rows="2" required></textarea>
                                     </div>
-                                    
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <label for="tahunLulus" class="form-label">Tahun Lulus</label>
-                                            <select class="form-select" id="tahunLulus" required>
-                                                <option value="">Pilih Tahun Lulus</option>
-                                                <!-- Options will be populated by JavaScript -->
-                                            </select>
+                                    <!-- KOLOM PEMBIMBING DITAMBAHKAN DI SINI -->
+                                    <div class="row g-2">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="mb-3">
+                                                <label for="dosenPembimbing1Skripsi" class="form-label">Pembimbing 1</label>
+                                                <select class="form-select form-select-sm" id="dosenPembimbing1Skripsi" required>
+                                                    <option value="">Pilih Pembimbing 1</option>
+                                                    <!-- Options akan diisi oleh JavaScript -->
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label for="tanggalSidang" class="form-label">Tanggal Sidang</label>
-                                            <input type="date" class="form-control" id="tanggalSidang" required>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="mb-3">
+                                                <label for="dosenPembimbing2Skripsi" class="form-label">Pembimbing 2</label>
+                                                <select class="form-select form-select-sm" id="dosenPembimbing2Skripsi">
+                                                    <option value="">Pilih Pembimbing 2</option>
+                                                    <!-- Options akan diisi oleh JavaScript -->
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                    
+                                    <div class="row g-2">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="mb-3">
+                                                <label for="tanggalSidang" class="form-label">Tanggal Sidang</label>
+                                                <input type="date" class="form-control form-control-sm" id="tanggalSidang" required>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="fileSkripsi" class="form-label">Upload Skripsi Final</label>
-                                        <input type="file" class="form-control" id="fileSkripsi" accept=".pdf" required>
+                                        <input type="file" class="form-control form-control-sm" id="fileSkripsi" accept=".pdf" required>
                                         <div class="form-text">Format file: PDF (maks. 10MB)</div>
                                     </div>
-                                    
                                     <div class="mb-3 form-check">
                                         <input type="checkbox" class="form-check-input" id="approvalCheck" required>
                                         <label class="form-check-label" for="approvalCheck">
                                             Saya menyatakan bahwa skripsi yang diupload adalah versi final yang telah disetujui oleh pembimbing dan panitia sidang
                                         </label>
                                     </div>
-                                    
-                                    <button type="submit" class="btn btn-success">
+                                    <button type="submit" class="btn btn-sm btn-success">
                                         <i class="fas fa-upload"></i> Upload Skripsi Final
                                     </button>
                                 </form>
@@ -1092,7 +1221,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <!-- Statistik Section -->
                 <div id="statistikContent" style="display: none;">
                     <div class="row">
@@ -1101,8 +1229,8 @@
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Statistik Bimbingan per Prodi</h5>
                                 </div>
-                                <div class="card-body">
-                                    <canvas id="prodiChart" height="250"></canvas>
+                                <div class="card-body p-2">
+                                    <canvas id="prodiChart" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -1111,21 +1239,20 @@
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Status Penyelesaian Skripsi</h5>
                                 </div>
-                                <div class="card-body">
-                                    <canvas id="statusChart" height="250"></canvas>
+                                <div class="card-body p-2">
+                                    <canvas id="statusChart" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="row mt-4">
+                    <div class="row mt-3">
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Rata-rata Waktu Penyelesaian</h5>
                                 </div>
-                                <div class="card-body">
-                                    <canvas id="waktuChart" height="250"></canvas>
+                                <div class="card-body p-2">
+                                    <canvas id="waktuChart" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -1134,8 +1261,8 @@
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Trend Jumlah Skripsi per Tahun</h5>
                                 </div>
-                                <div class="card-body">
-                                    <canvas id="trendChart" height="250"></canvas>
+                                <div class="card-body p-2">
+                                    <canvas id="trendChart" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -1144,15 +1271,12 @@
             </div>
         </div>
     </div>
-
     <!-- Bootstrap & jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
         // Google Apps Script Web App URL
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbzKUTp5tkWano-rBtv1OV15V7DRvUwF4KwYseMIkOOx0U-rx6Tk7BeKu7leYm-KVU80cQ/exec';
-        
         // Global variables
         let currentSection = 'pengajuan';
         let currentMenu = 'bimbingan';
@@ -1162,31 +1286,53 @@
         let dosenList = [];
         let emailSuggestions = [];
         let filteredSkripsiData = [];
-        
+        // Daftar dosen statis sesuai permintaan
+        const staticDosenList = [
+            {id: 1, nama: "Prof. Dr. Hj. Darmawati, M. Hum"},
+            {id: 2, nama: "Dr. H. Moh. Mahrus, M. HI"},
+            {id: 3, nama: "Dr. Iskandar, M. Ag."},
+            {id: 4, nama: "Dr. Hj. Wahdatunnisa, M.A."},
+            {id: 5, nama: "Dr. Tikawati, M. SI."},
+            {id: 6, nama: "Dr. Hj. Norvadewi, M. Ag."},
+            {id: 7, nama: "Nurul Fadhilah, M.E."},
+            {id: 8, nama: "Fitria Rahmah, S.EI, M.A."},
+            {id: 9, nama: "Tika Parlina, SE., MM."},
+            {id: 10, nama: "Irma Yuliani, SE., M. SI."},
+            {id: 11, nama: "Dedy Mainata, M. Ag."},
+            {id: 12, nama: "Rista Aribowo, M. Pd."},
+            {id: 13, nama: "Akhmad Nurzaroni, M. Ag."},
+            {id: 14, nama: "H. Yusran, M. Ag."},
+            {id: 15, nama: "Nur Rahmatullah, SE., M. SA."},
+            {id: 16, nama: "Ahmad Syarif, M. Sc."},
+            {id: 17, nama: "Alias Candra, M. EI."},
+            {id: 18, nama: "Iswadi, M. SI."},
+            {id: 19, nama: "Dharma Yanti, SE., M. SI."},
+            {id: 20, nama: "Yovanda Noni, M. SI."},
+            {id: 21, nama: "Dr. H. Mursyid, M. SI."},
+            {id: 22, nama: "Muhammad Hasbi, M. SE."},
+            {id: 23, nama: "Mahmud al Chusairi, M. E."},
+            {id: 24, nama: "Dr. H. M. Birusman Nuryadin, M. SI."},
+            {id: 25, nama: "Sugiono, M. Kom."},
+            {id: 26, nama: "Dr. H. Shafa, M. Pd."},
+            {id: 27, nama: "Basrie, S. Kom., M. Kom"}
+        ];
         // Initialize dashboard
         $(document).ready(function() {
             // Initialize sidebar menu
             initSidebarMenu();
-            
             // Load initial data
             loadInitialData();
-            
             // Initialize tahun akademik options
             initTahunAkademik();
-            
             // Initialize dosen options
             initDosenOptions();
-            
             // Initialize charts
             initCharts();
-            
             // Initialize toast notifications
             $('.toast').toast();
-            
             // Add click events to main stat cards
             $('.main-stat-card').click(function() {
                 const target = $(this).data('target');
-                
                 if (target === 'databaseSkripsi') {
                     // Open Skripsi menu and show database
                     $('#skripsiSubmenu').collapse('show');
@@ -1205,7 +1351,6 @@
                     }, 300);
                 }
             });
-
             // Add event listener for NIM input to autofill data
             $('#nimSkripsi').on('input', function() {
                 const nim = $(this).val().trim();
@@ -1217,23 +1362,30 @@
                         $('#namaSkripsi').val(studentData.Nama).prop('readonly', true);
                         $('#prodiSkripsi').val(studentData.Prodi).prop('disabled', true);
                         $('#judulSkripsiFinal').val(studentData.Judul);
+                        // Set pembimbing
+                        $('#dosenPembimbing1Skripsi').val(studentData.DosenPembimbing1Id || '');
+                        $('#dosenPembimbing2Skripsi').val(studentData.DosenPembimbing2Id || '');
                     } else {
                         // If not found, enable fields and clear
                         $('#namaSkripsi').val('').prop('readonly', false);
                         $('#prodiSkripsi').val('').prop('disabled', false);
                         $('#judulSkripsiFinal').val('');
+                        // Clear pembimbing
+                        $('#dosenPembimbing1Skripsi').val('');
+                        $('#dosenPembimbing2Skripsi').val('');
                     }
                 } else {
                     $('#namaSkripsi').val('').prop('readonly', false);
                     $('#prodiSkripsi').val('').prop('disabled', false);
                     $('#judulSkripsiFinal').val('');
+                    // Clear pembimbing
+                    $('#dosenPembimbing1Skripsi').val('');
+                    $('#dosenPembimbing2Skripsi').val('');
                 }
             });
-
             // Event handler untuk form pengajuan proposal
             $('#pengajuanProposalForm').submit(function(e) {
                 e.preventDefault();
-                
                 // Basic validation
                 const nim = $('#nimProposal').val();
                 const nama = $('#namaProposal').val();
@@ -1245,32 +1397,26 @@
                 const dosenPembimbing2 = $('#dosenPembimbing2').val();
                 const dosenPembimbing2Nama = $('#dosenPembimbing2 option:selected').text();
                 const fileInput = $('#fileProposal')[0];
-                
                 if (!nim || !nama || !prodi || !tahunAkademik || !judul || !dosenPembimbing1 || !fileInput.files[0]) {
                     showNotification('Harap lengkapi semua field yang wajib diisi', 'warning');
                     return;
                 }
-                
                 const file = fileInput.files[0];
-                
                 // Validate file size
                 if (file.size > 10 * 1024 * 1024) { // 10MB
                     showNotification('Ukuran file terlalu besar. Maksimal 10MB.', 'warning');
                     return;
                 }
-                
                 // Show loading
                 const submitBtn = $(this).find('button[type="submit"]');
                 const originalText = submitBtn.html();
                 submitBtn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengajukan...');
                 submitBtn.prop('disabled', true);
-                
                 // Convert file to base64
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = function() {
                     const base64 = reader.result.split(',')[1];
-                    
                     // Prepare data for submission
                     const formData = new FormData();
                     formData.append('action', 'uploadProposal');
@@ -1286,7 +1432,6 @@
                     formData.append('filename', file.name);
                     formData.append('mimeType', file.type);
                     formData.append('file', base64);
-                    
                     // Send data to Google Apps Script
                     fetch(scriptUrl, {
                         method: 'POST',
@@ -1297,7 +1442,6 @@
                         if (data.result === 'success') {
                             showNotification('Proposal berhasil diajukan!', 'success');
                             $('#pengajuanProposalForm')[0].reset();
-                            
                             // Reload data to reflect changes
                             loadInitialData();
                         } else {
@@ -1314,7 +1458,6 @@
                         submitBtn.prop('disabled', false);
                     });
                 };
-                
                 reader.onerror = function(error) {
                     console.error('Error reading file:', error);
                     showNotification('Terjadi kesalahan saat membaca file.', 'error');
@@ -1322,16 +1465,13 @@
                     submitBtn.prop('disabled', false);
                 };
             });
-            
             // Event handler untuk simpan status
             $('#saveStatusBtn').click(function() {
                 const nim = $('#editNim').val();
                 const newStatus = $('#statusSelect').val();
-                
                 // Show loading
-                $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
+                $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
                 $(this).prop('disabled', true);
-                
                 // Send update request
                 $.ajax({
                     url: scriptUrl,
@@ -1346,7 +1486,6 @@
                         if (data.result === 'success') {
                             showNotification('Status berhasil diperbarui', 'success');
                             $('#editStatusModal').modal('hide');
-                            
                             // Reload data to reflect changes
                             loadBimbinganDataFromServer();
                         } else {
@@ -1358,34 +1497,29 @@
                         showNotification('Terjadi kesalahan saat memperbarui status', 'error');
                     },
                     complete: function() {
-                        $('#saveStatusBtn').html('Simpan Perubahan').prop('disabled', false);
+                        $('#saveStatusBtn').html('<i class="fas fa-check"></i>').prop('disabled', false);
                     }
                 });
             });
-            
             // Event handler untuk kirim notifikasi
             $('#sendNotificationBtn').click(function() {
                 const nim = $('#notifNim').val();
                 const email = $('#recipientEmail').val();
                 const subject = $('#notifSubject').val();
                 const message = $('#notifMessage').val();
-                
                 if (!email || !subject || !message) {
                     showNotification('Harap lengkapi semua field notifikasi', 'warning');
                     return;
                 }
-                
                 // Validate email format
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
                     showNotification('Format email tidak valid', 'warning');
                     return;
                 }
-                
                 // Show loading
-                $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...');
+                $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
                 $(this).prop('disabled', true);
-                
                 // Send notification request
                 $.ajax({
                     url: scriptUrl,
@@ -1411,31 +1545,26 @@
                         showNotification('Terjadi kesalahan saat mengirim notifikasi', 'error');
                     },
                     complete: function() {
-                        $('#sendNotificationBtn').html('Kirim Notifikasi').prop('disabled', false);
+                        $('#sendNotificationBtn').html('<i class="fas fa-check"></i>').prop('disabled', false);
                     }
                 });
             });
-            
             // Event handler untuk input email (autocomplete)
             $('#recipientEmail').on('input', function() {
                 const email = $(this).val().toLowerCase();
                 const suggestions = $('#emailSuggestions');
-                
                 if (email.length === 0) {
                     suggestions.hide();
                     return;
                 }
-                
                 // Filter suggestions based on input
                 const filteredSuggestions = emailSuggestions.filter(suggestion => 
                     suggestion.toLowerCase().includes(email)
                 );
-                
                 if (filteredSuggestions.length === 0) {
                     suggestions.hide();
                     return;
                 }
-                
                 // Show suggestions
                 suggestions.empty();
                 filteredSuggestions.forEach(suggestion => {
@@ -1443,83 +1572,66 @@
                 });
                 suggestions.show();
             });
-            
             // Event handler untuk memilih suggestion
             $(document).on('click', '.email-suggestion', function() {
                 $('#recipientEmail').val($(this).text());
                 $('#emailSuggestions').hide();
             });
-            
             // Hide suggestions when clicking outside
             $(document).on('click', function(e) {
                 if (!$(e.target).closest('.autofill-container').length) {
                     $('#emailSuggestions').hide();
                 }
             });
-
             // Event handler untuk pencarian judul skripsi
             $('#btnSearch').click(function() {
                 filterSkripsiTable();
             });
-
             $('#searchJudul').on('keyup', function(e) {
                 if (e.key === 'Enter') {
                     filterSkripsiTable();
                 }
             });
-
             $('#filterTahun, #filterProdi, #filterStatus').change(function() {
                 filterSkripsiTable();
             });
-
             // Event handler untuk cek similarity
             $('#checkSimilarityBtn').click(function() {
                 checkSimilarity();
             });
-
             // Event handler untuk tombol lanjutkan meski similarity tinggi
             $('#proceedAnywayBtn').click(function() {
                 $('#similarityModal').modal('hide');
                 $('#pengajuanProposalForm').off('submit').submit();
             });
         });
-        
         // Initialize sidebar menu functionality
         function initSidebarMenu() {
             // Main menu click event
             $('.main-item').click(function(e) {
                 e.preventDefault();
-                
                 const target = $(this).attr('href');
-                
                 // Hide all content sections
                 $('#bimbinganContent, #skripsiContent, #statistikContent').hide();
-                
                 // Show target content
                 if (target === '#statistik') {
                     $('#statistikContent').show();
                     currentMenu = 'statistik';
                     loadStatistikData();
                 }
-                
                 // Update active menu
                 $('.main-item').removeClass('active');
                 $(this).addClass('active');
             });
-            
             // Submenu click event for Bimbingan
             $('.sub-item').click(function(e) {
                 e.preventDefault();
-                
                 const target = $(this).attr('href');
-                
                 // Hide all content sections in Bimbingan
                 $('#bimbinganContent .content-section').hide();
-                
                 // Show target content
                 $(target).show();
                 currentSection = target.substring(1);
-                
                 // Load data if needed
                 if (currentSection === 'dataBimbingan') {
                     loadBimbinganData();
@@ -1530,65 +1642,51 @@
                 } else if (currentSection === 'earlyWarning') {
                     loadEarlyWarning();
                 }
-                
                 // Update active submenu
                 $('.sub-item').removeClass('active');
                 $(this).addClass('active');
             });
-            
             // Bimbingan menu toggle
             $('#bimbinganSubmenu').on('show.bs.collapse', function() {
                 currentMenu = 'bimbingan';
                 $('#bimbinganContent').show();
                 $('#skripsiContent, #statistikContent').hide();
-                
                 // Update active menu
                 $('.main-item').removeClass('active');
                 $('a[href="#bimbinganSubmenu"]').addClass('active');
             });
-            
             // Skripsi menu toggle
             $('#skripsiSubmenu').on('show.bs.collapse', function() {
                 currentMenu = 'skripsi';
                 $('#skripsiContent').show();
                 $('#bimbinganContent, #statistikContent').hide();
-                
                 // Update active menu
                 $('.main-item').removeClass('active');
                 $('a[href="#skripsiSubmenu"]').addClass('active');
-                
                 // Load data if needed
                 loadSkripsiData();
             });
-            
             // Submenu click event for Skripsi
             $('#skripsiSubmenu .sub-item').click(function(e) {
                 e.preventDefault();
-                
                 const target = $(this).attr('href');
-                
                 // Hide all content sections in Skripsi
                 $('#skripsiContent .content-section').hide();
-                
                 // Show target content
                 $(target).show();
-                
                 // Load data if needed
                 if (target === '#databaseSkripsi') {
                     loadSkripsiData();
                 }
-                
                 // Update active submenu
                 $('#skripsiSubmenu .sub-item').removeClass('active');
                 $(this).addClass('active');
             });
         }
-        
         // Load initial data
         function loadInitialData() {
             // Show loading state
             showLoading();
-            
             // Load dosen data first
             $.ajax({
                 url: scriptUrl,
@@ -1600,7 +1698,6 @@
                 success: function(response) {
                     dosenList = response;
                     initDosenOptions();
-                    
                     // Then load other data
                     loadBimbinganDataFromServer();
                     loadSkripsiDataFromServer();
@@ -1611,36 +1708,8 @@
                 error: function(error) {
                     console.error('Error loading dosen data:', error);
                     // If failed to load dosen data, use default list
-                    dosenList = [
-                        {id: 1, nama: "Prof. Dr. Hj. Darmawati, M. Hum"},
-                        {id: 2, nama: "Dr. H. Moh. Mahrus, M. HI"},
-                        {id: 3, nama: "Dr. Iskandar, M. Ag."},
-                        {id: 4, nama: "Dr. Hj. Wahdatunnisa, M.A."},
-                        {id: 5, nama: "Dr. Tikawati, M. SI."},
-                        {id: 6, nama: "Dr. Hj. Norvadewi, M. Ag."},
-                        {id: 7, nama: "Nurul Fadhilah, M.E."},
-                        {id: 8, nama: "Fitria Rahmah, S.EI, M.A."},
-                        {id: 9, nama: "Tika Parlina, SE., MM."},
-                        {id: 10, nama: "Irma Yuliani, SE., M. SI."},
-                        {id: 11, nama: "Dedy Mainata, M. Ag."},
-                        {id: 12, nama: "Rista Aribowo, M. Pd."},
-                        {id: 13, nama: "Akhmad Nurzaroni, M. Ag."},
-                        {id: 14, nama: "H. Yusran, M. Ag."},
-                        {id: 15, nama: "Nur Rahmatullah, SE., M. SA."},
-                        {id: 16, nama: "Ahmad Syarif, M. Sc."},
-                        {id: 17, nama: "Alias Candra, M. EI."},
-                        {id: 18, nama: "Iswadi, M. SI."},
-                        {id: 19, nama: "Dharma Yanti, SE., M. SI."},
-                        {id: 20, nama: "Yovanda Noni, M. SI."},
-                        {id: 21, nama: "Dr. H. Mursyid, M. SI."},
-                        {id: 22, nama: "Muhammad Hasbi, M. SE."},
-                        {id: 23, nama: "Mahmud al Chusairi, M. E."},
-                        {id: 24, nama: "Dr. H. M. Birusman Nuryadin, M. SI."},
-                        {id: 25, nama: "Sugiono, M. Kom."},
-                        {id: 26, nama: "Dr. H. Shafa, M. Pd."}
-                    ];
+                    dosenList = staticDosenList;
                     initDosenOptions();
-                    
                     // Load other data
                     loadBimbinganDataFromServer();
                     loadSkripsiDataFromServer();
@@ -1650,7 +1719,6 @@
                 }
             });
         }
-        
         // Load bimbingan data from server
         function loadBimbinganDataFromServer() {
             $.ajax({
@@ -1671,7 +1739,6 @@
                 }
             });
         }
-        
         // Load skripsi data from server
         function loadSkripsiDataFromServer() {
             $.ajax({
@@ -1691,7 +1758,6 @@
                 }
             });
         }
-        
         // Load early warning data from server
         function loadEarlyWarningDataFromServer() {
             $.ajax({
@@ -1710,7 +1776,6 @@
                 }
             });
         }
-        
         // Load skripsi final data from server
         function loadSkripsiFinalDataFromServer() {
             $.ajax({
@@ -1728,7 +1793,6 @@
                 }
             });
         }
-        
         // Load email suggestions
         function loadEmailSuggestions() {
             // In a real application, this would come from the server
@@ -1742,125 +1806,119 @@
                 'hotmail.com'
             ];
         }
-        
         // Update main dashboard statistics
         function updateMainStats() {
             // Update total skripsi
             $('#totalSkripsiMain').text(skripsiData.length);
-            
             // Update total bimbingan
             $('#totalBimbinganMain').text(bimbinganData.length);
-            
             // Update selesai bimbingan
             const selesaiCount = bimbinganData.filter(item => item.Status === 'Selesai').length;
             $('#selesaiBimbinganMain').text(selesaiCount);
-            
             // Update early warning
             $('#earlyWarningMain').text(earlyWarningData.length);
         }
-        
         // Initialize tahun akademik options
         function initTahunAkademik() {
             const currentYear = new Date().getFullYear();
             const selectElement = $('#tahunAkademik');
-            
             // Clear existing options
             selectElement.empty();
             selectElement.append('<option value="">Pilih Tahun Akademik</option>');
-            
             // Add options for the last 5 years and current year
             for (let i = 4; i >= 0; i--) {
                 const year = currentYear - i;
                 const academicYear = year + '/' + (year + 1);
                 selectElement.append(`<option value="${academicYear}">${academicYear}</option>`);
             }
-            
             // Also initialize for tahun lulus
             $('#tahunLulus').empty();
             $('#tahunLulus').append('<option value="">Pilih Tahun Lulus</option>');
             $('#filterTahun').empty();
             $('#filterTahun').append('<option value="">Semua Tahun</option>');
-            
             for (let i = 4; i >= 0; i--) {
                 const year = currentYear - i;
                 $('#tahunLulus').append(`<option value="${year}">${year}</option>`);
                 $('#filterTahun').append(`<option value="${year}">${year}</option>`);
             }
         }
-        
         // Initialize dosen options
         function initDosenOptions() {
             const selectPembimbing1 = $('#dosenPembimbing1');
             const selectPembimbing2 = $('#dosenPembimbing2');
+            const selectPembimbing1Skripsi = $('#dosenPembimbing1Skripsi');
+            const selectPembimbing2Skripsi = $('#dosenPembimbing2Skripsi');
             
             // Clear existing options
             selectPembimbing1.empty();
             selectPembimbing2.empty();
+            selectPembimbing1Skripsi.empty();
+            selectPembimbing2Skripsi.empty();
             
             // Add default options
             selectPembimbing1.append('<option value="">Pilih Dosen Pembimbing 1</option>');
-            selectPembimbing2.append('<option value="">Pilih Dosen Pembimbing 2 (jika diperlukan)</option>');
+            selectPembimbing2.append('<option value="">Pilih Dosen Pembimbing 2</option>');
+            selectPembimbing1Skripsi.append('<option value="">Pilih Dosen Pembimbing 1</option>');
+            selectPembimbing2Skripsi.append('<option value="">Pilih Dosen Pembimbing 2</option>');
             
             // Add dosen options
             dosenList.forEach(dosen => {
                 selectPembimbing1.append(`<option value="${dosen.id}">${dosen.nama}</option>`);
                 selectPembimbing2.append(`<option value="${dosen.id}">${dosen.nama}</option>`);
+                selectPembimbing1Skripsi.append(`<option value="${dosen.id}">${dosen.nama}</option>`);
+                selectPembimbing2Skripsi.append(`<option value="${dosen.id}">${dosen.nama}</option>`);
             });
         }
-        
         // Load bimbingan data to table
         function loadBimbinganData() {
             const tableBody = $('#tableBimbingan tbody');
             tableBody.empty();
-            
             if (bimbinganData.length === 0) {
-                tableBody.append('<tr><td colspan="8" class="text-center">Tidak ada data bimbingan</td></tr>');
+                tableBody.append('<tr><td colspan="8" class="text-center py-3">Tidak ada data bimbingan</td></tr>');
                 return;
             }
-            
             bimbinganData.forEach(item => {
                 const statusClass = getStatusClass(item.Status);
-                
                 const row = `
                     <tr>
-                        <td>${item.NIM || ''}</td>
-                        <td>${item.Nama || ''}</td>
-                        <td>${getProdiName(item.Prodi) || ''}</td>
-                        <td>${item.Pembimbing1 || ''}</td>
-                        <td>${item.Pembimbing2 || ''}</td>
-                        <td>${item.Judul || ''}</td>
-                        <td><span class="badge ${statusClass}">${item.Status || ''}</span></td>
-                        <td>
+                        <td class="py-2">${item.NIM || ''}</td>
+                        <td class="py-2">${item.Nama || ''}</td>
+                        <td class="py-2">${getProdiName(item.Prodi) || ''}</td>
+                        <td class="py-2">${item.Pembimbing1 || ''}</td>
+                        <td class="py-2">${item.Pembimbing2 || ''}</td>
+                        <td class="py-2">${item.Judul || ''}</td>
+                        <td class="py-2"><span class="badge ${statusClass}">${item.Status || ''}</span></td>
+                        <td class="py-2">
                             <button class="btn btn-sm btn-info view-btn" data-nim="${item.NIM}"><i class="fas fa-eye"></i></button>
                             <button class="btn btn-sm btn-warning edit-btn" data-nim="${item.NIM}"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-warning notif-btn" data-nim="${item.NIM}" data-nama="${item.Nama}"><i class="fas fa-bell"></i></button>
                         </td>
                     </tr>
                 `;
-                
                 tableBody.append(row);
             });
-            
             // Add event listeners to buttons
             $('.view-btn').click(function() {
                 const nim = $(this).data('nim');
                 viewBimbinganDetail(nim);
             });
-            
             $('.edit-btn').click(function() {
                 const nim = $(this).data('nim');
                 editBimbinganStatus(nim);
             });
-            
+            $('.notif-btn').click(function() {
+                const nim = $(this).data('nim');
+                const nama = $(this).data('nama');
+                openNotif(nim, nama);
+            });
             hideLoading();
         }
-        
         // View bimbingan detail
         function viewBimbinganDetail(nim) {
             const data = bimbinganData.find(item => item.NIM === nim);
-            
             if (data) {
                 const detailContent = `
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-sm">
                         <tr><th>NIM</th><td>${data.NIM || '-'}</td></tr>
                         <tr><th>Nama</th><td>${data.Nama || '-'}</td></tr>
                         <tr><th>Program Studi</th><td>${getProdiName(data.Prodi) || '-'}</td></tr>
@@ -1872,206 +1930,169 @@
                         <tr><th>File Proposal</th><td>${data.FileProposal ? `<a href="${data.FileProposal}" target="_blank">Lihat Proposal</a>` : 'Tidak ada file'}</td></tr>
                     </table>
                 `;
-                
                 $('#bimbinganDetailContent').html(detailContent);
                 $('#bimbinganDetailModal').modal('show');
             }
         }
-        
         // Edit bimbingan status
         function editBimbinganStatus(nim) {
             const data = bimbinganData.find(item => item.NIM === nim);
-            
             if (data) {
                 $('#editNim').val(data.NIM);
                 $('#statusSelect').val(data.Status || 'Dalam Proses');
                 $('#editStatusModal').modal('show');
             }
         }
-        
         // Load tahap bimbingan data
         function loadTahapBimbingan() {
             const tableBody = $('#tableTahapBimbingan tbody');
             tableBody.empty();
-            
             if (bimbinganData.length === 0) {
-                tableBody.append('<tr><td colspan="6" class="text-center">Tidak ada data tahap bimbingan</td></tr>');
+                tableBody.append('<tr><td colspan="6" class="text-center py-3">Tidak ada data tahap bimbingan</td></tr>');
                 return;
             }
-            
             bimbinganData.forEach(item => {
                 const progress = Math.min(100, Math.floor(Math.random() * 100));
-                
                 const row = `
                     <tr>
-                        <td>${item.NIM || ''}</td>
-                        <td>${item.Nama || ''}</td>
-                        <td>${getTahapBimbingan(progress)}</td>
-                        <td>
-                            <div class="progress">
+                        <td class="py-2">${item.NIM || ''}</td>
+                        <td class="py-2">${item.Nama || ''}</td>
+                        <td class="py-2">${getTahapBimbingan(progress)}</td>
+                        <td class="py-2">
+                            <div class="progress" style="height: 10px;">
                                 <div class="progress-bar" role="progressbar" style="width: ${progress}%;">${progress}%</div>
                             </div>
                         </td>
-                        <td>${new Date().toLocaleDateString('id-ID')}</td>
-                        <td>
+                        <td class="py-2">${new Date().toLocaleDateString('id-ID')}</td>
+                        <td class="py-2">
                             <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
                             <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
                         </td>
                     </tr>
                 `;
-                
                 tableBody.append(row);
             });
         }
-        
         // Load status bimbingan data
         function loadStatusBimbingan() {
             const tableBody = $('#tableStatusBimbingan tbody');
             tableBody.empty();
-            
             // Update stat cards
             $('#totalBimbingan').text(bimbinganData.length);
             $('#selesaiBimbingan').text(bimbinganData.filter(item => item.Status === 'Selesai').length);
             $('#prosesBimbingan').text(bimbinganData.filter(item => item.Status === 'Dalam Proses').length);
             $('#terlambatBimbingan').text(bimbinganData.filter(item => item.Status === 'Terlambat').length);
-            
             if (bimbinganData.length === 0) {
-                tableBody.append('<tr><td colspan="8" class="text-center">Tidak ada data status bimbingan</td></tr>');
+                tableBody.append('<tr><td colspan="8" class="text-center py-3">Tidak ada data status bimbingan</td></tr>');
                 return;
             }
-            
             bimbinganData.forEach(item => {
                 const progress = Math.min(100, Math.floor(Math.random() * 100));
                 const statusClass = getStatusClass(item.Status);
                 const estSelesai = new Date();
                 estSelesai.setDate(estSelesai.getDate() + Math.floor(Math.random() * 90));
-                
                 const row = `
                     <tr>
-                        <td>${item.NIM || ''}</td>
-                        <td>${item.Nama || ''}</td>
-                        <td>${getProdiName(item.Prodi) || ''}</td>
-                        <td>${item.Judul || ''}</td>
-                        <td><span class="badge ${statusClass}">${item.Status || ''}</span></td>
-                        <td>
-                            <div class="progress" style="height: 10px;">
+                        <td class="py-2">${item.NIM || ''}</td>
+                        <td class="py-2">${item.Nama || ''}</td>
+                        <td class="py-2">${getProdiName(item.Prodi) || ''}</td>
+                        <td class="py-2">${item.Judul || ''}</td>
+                        <td class="py-2"><span class="badge ${statusClass}">${item.Status || ''}</span></td>
+                        <td class="py-2">
+                            <div class="progress" style="height: 8px;">
                                 <div class="progress-bar" role="progressbar" style="width: ${progress}%;"></div>
                             </div>
                         </td>
-                        <td>${estSelesai.toLocaleDateString('id-ID')}</td>
-                        <td>
+                        <td class="py-2">${estSelesai.toLocaleDateString('id-ID')}</td>
+                        <td class="py-2">
                             <button class="btn btn-sm btn-info view-btn" data-nim="${item.NIM}"><i class="fas fa-eye"></i></button>
                             <button class="btn btn-sm btn-warning edit-btn" data-nim="${item.NIM}"><i class="fas fa-edit"></i></button>
                         </td>
                     </tr>
                 `;
-                
                 tableBody.append(row);
             });
-            
             // Add event listeners to buttons
             $('.view-btn').click(function() {
                 const nim = $(this).data('nim');
                 viewBimbinganDetail(nim);
             });
-            
             $('.edit-btn').click(function() {
                 const nim = $(this).data('nim');
                 editBimbinganStatus(nim);
             });
         }
-        
         // Load early warning data
         function loadEarlyWarning() {
             const tableBody = $('#tableEarlyWarning tbody');
             tableBody.empty();
-            
             if (earlyWarningData.length === 0) {
-                tableBody.append('<tr><td colspan="7" class="text-center">Tidak ada data early warning</td></tr>');
+                tableBody.append('<tr><td colspan="7" class="text-center py-3">Tidak ada data early warning</td></tr>');
                 return;
             }
-            
             earlyWarningData.forEach(item => {
                 const statusClass = getStatusClass(item.Status);
-                
                 const row = `
                     <tr>
-                        <td>${item.NIM || ''}</td>
-                        <td>${item.Nama || ''}</td>
-                        <td>${getProdiName(item.Prodi) || ''}</td>
-                        <td>${item.Semester || ''}</td>
-                        <td><span class="badge ${statusClass}">${item.Status || ''}</span></td>
-                        <td><span class="badge bg-danger">${item.Peringatan || ''}</span></td>
-                        <td>
+                        <td class="py-2">${item.NIM || ''}</td>
+                        <td class="py-2">${item.Nama || ''}</td>
+                        <td class="py-2">${getProdiName(item.Prodi) || ''}</td>
+                        <td class="py-2">${item.Semester || ''}</td>
+                        <td class="py-2"><span class="badge ${statusClass}">${item.Status || ''}</span></td>
+                        <td class="py-2"><span class="badge bg-danger">${item.Peringatan || ''}</span></td>
+                        <td class="py-2">
                             <button class="btn btn-sm btn-warning notif-btn" data-nim="${item.NIM}" data-nama="${item.Nama}"><i class="fas fa-bell"></i> Notifikasi</button>
                         </td>
                     </tr>
                 `;
                 tableBody.append(row);
             });
-            
             // Add event listeners to notification buttons
             $('.notif-btn').click(function() {
                 const nim = $(this).data('nim');
                 const nama = $(this).data('nama');
-                const data = earlyWarningData.find(item => item.NIM === nim);
-                
-                if (data) {
-                    $('#notifNim').val(data.NIM);
-                    $('#recipientEmail').val('');
-                    $('#notifSubject').val('Peringatan Early Warning Bimbingan Skripsi');
-                    $('#notifMessage').val(`Kepada ${data.Nama} (NIM: ${data.NIM}),\n\nAnda mendapatkan peringatan early warning dari sistem karena belum menyelesaikan skripsi. Status Anda saat ini: ${data.Status}. Silakan segera menghubungi pembimbing untuk bimbingan lebih lanjut.\n\nSalam,\nSistem Informasi Bimbingan Skripsi`);
-                    $('#notificationModal').modal('show');
-                }
+                openNotif(nim, nama);
             });
         }
-        
         // Load skripsi data
         function loadSkripsiData() {
             const tableBody = $('#tableSkripsi tbody');
             tableBody.empty();
-            
             if (filteredSkripsiData.length === 0) {
-                tableBody.append('<tr><td colspan="8" class="text-center">Tidak ada data skripsi</td></tr>');
+                tableBody.append('<tr><td colspan="8" class="text-center py-3">Tidak ada data skripsi</td></tr>');
                 return;
             }
-            
             filteredSkripsiData.forEach(item => {
                 const statusClass = item.Status === 'Lulus' ? 'bg-success' : 'bg-warning';
-                
                 const row = `
                     <tr>
-                        <td>${item.Judul || ''}</td>
-                        <td>${item.Penulis || ''}</td>
-                        <td>${item.Tahun || ''}</td>
-                        <td>${getProdiName(item.Prodi) || ''}</td>
-                        <td>${item.Pembimbing1 || ''}</td>
-                        <td>${item.Pembimbing2 || ''}</td>
-                        <td><span class="badge ${statusClass}">${item.Status || ''}</span></td>
-                        <td>
+                        <td class="py-2">${item.Judul || ''}</td>
+                        <td class="py-2">${item.Penulis || ''}</td>
+                        <td class="py-2">${item.Tahun || ''}</td>
+                        <td class="py-2">${getProdiName(item.Prodi) || ''}</td>
+                        <td class="py-2">${item.Pembimbing1 || ''}</td>
+                        <td class="py-2">${item.Pembimbing2 || ''}</td>
+                        <td class="py-2"><span class="badge ${statusClass}">${item.Status || ''}</span></td>
+                        <td class="py-2">
                             <button class="btn btn-sm btn-info view-skripsi-btn" data-id="${item.Timestamp || ''}"><i class="fas fa-eye"></i></button>
                             <a href="${item.URL || '#'}" target="_blank" class="btn btn-sm btn-primary ${item.URL ? '' : 'disabled'}"><i class="fas fa-download"></i></a>
                         </td>
                     </tr>
                 `;
-                
                 tableBody.append(row);
             });
-            
             // Add event listeners to view buttons
             $('.view-skripsi-btn').click(function() {
                 const id = $(this).data('id');
                 viewSkripsiDetail(id);
             });
         }
-        
         // Filter skripsi table based on search criteria
         function filterSkripsiTable() {
             const searchText = $('#searchJudul').val().toLowerCase();
             const filterTahun = $('#filterTahun').val();
             const filterProdi = $('#filterProdi').val();
             const filterStatus = $('#filterStatus').val();
-            
             filteredSkripsiData = skripsiData.filter(item => {
                 const judulMatch = !searchText || item.Judul.toLowerCase().includes(searchText);
                 const tahunMatch = !filterTahun || item.Tahun == filterTahun;
@@ -2079,20 +2100,16 @@
                 const statusMatch = !filterStatus || 
                     (filterStatus === 'Lulus' && item.Status === 'Lulus') ||
                     (filterStatus === 'Proses' && item.Status !== 'Lulus');
-                
                 return judulMatch && tahunMatch && prodiMatch && statusMatch;
             });
-            
             loadSkripsiData();
         }
-        
         // View skripsi detail
         function viewSkripsiDetail(id) {
             const data = skripsiData.find(item => item.Timestamp === id);
-            
             if (data) {
                 const detailContent = `
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-sm">
                         <tr><th>Judul</th><td>${data.Judul || '-'}</td></tr>
                         <tr><th>Penulis</th><td>${data.Penulis || '-'}</td></tr>
                         <tr><th>Tahun</th><td>${data.Tahun || '-'}</td></tr>
@@ -2103,126 +2120,106 @@
                         <tr><th>File Skripsi</th><td>${data.URL ? `<a href="${data.URL}" target="_blank">Lihat Skripsi</a>` : 'Tidak ada file'}</td></tr>
                     </table>
                 `;
-                
                 $('#skripsiDetailContent').html(detailContent);
-                
                 // Set download button
                 if (data.URL) {
                     $('#downloadSkripsiBtn').attr('href', data.URL).removeClass('disabled');
                 } else {
                     $('#downloadSkripsiBtn').attr('href', '#').addClass('disabled');
                 }
-                
                 $('#skripsiDetailModal').modal('show');
             }
         }
-        
-        // Check similarity of proposal title
+        // Cek Similarity
         function checkSimilarity() {
-            const judul = $('#judulProposal').val().trim();
-            
+            const judul = $("#judulProposal").val().trim();
             if (!judul) {
-                showNotification('Masukkan judul proposal terlebih dahulu', 'warning');
+                showNotification("Masukkan judul dulu", "warning");
                 return;
             }
+            $("#similarityCheckResult").html('<div class="spinner-border text-primary spinner-border-sm me-2"></div> Mengecek...');
+            $("#similarTitlesList").empty();
+            $("#recommendation").empty();
             
-            // Show loading
-            $('#checkSimilarityBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengecek...');
-            $('#checkSimilarityBtn').prop('disabled', true);
+            const fd = new FormData();
+            fd.append("action", "checkSimilarity");
+            fd.append("judul", judul);
             
-            // Send request to check similarity
-            $.ajax({
-                url: scriptUrl,
-                method: 'POST',
-                data: {
-                    action: 'checkSimilarity',
-                    judul: judul
-                },
-                success: function(response) {
-                    const data = JSON.parse(response);
-                    
-                    if (data.result === 'success') {
-                        displaySimilarityResult(data.similarity, data.similarTitles);
-                    } else {
-                        showNotification('Gagal memeriksa similarity: ' + data.message, 'error');
-                    }
-                },
-                error: function(error) {
-                    console.error('Error:', error);
-                    showNotification('Terjadi kesalahan saat memeriksa similarity', 'error');
-                },
-                complete: function() {
-                    $('#checkSimilarityBtn').html('<i class="fas fa-search"></i> Cek Similarity');
-                    $('#checkSimilarityBtn').prop('disabled', false);
-                }
-            });
-        }
-        
-        // Display similarity check result
-        function displaySimilarityResult(similarity, similarTitles) {
-            let similarityClass = 'similarity-low';
-            let similarityBg = 'similarity-low-bg';
-            let similarityText = 'Rendah';
-            
-            if (similarity >= 70) {
-                similarityClass = 'similarity-high';
-                similarityBg = 'similarity-high-bg';
-                similarityText = 'Tinggi';
-            } else if (similarity >= 40) {
-                similarityClass = 'similarity-medium';
-                similarityBg = 'similarity-medium-bg';
-                similarityText = 'Sedang';
-            }
-            
-            // Update the similarity check result in the form
-            $('#similarityCheckResult').html(`
-                <div class="similarity-result ${similarityBg}">
-                    <p class="mb-1">Tingkat Similarity: <span class="${similarityClass}">${similarity.toFixed(2)}% (${similarityText})</span></p>
-                    <div class="similarity-progress mt-2">
-                        <div class="similarity-progress-bar ${similarityBg}" style="width: ${similarity}%">
-                            ${similarity.toFixed(2)}%
-                        </div>
-                    </div>
-                    <p class="mb-0 small mt-2">${similarity >= 70 ? 'Judul memiliki kemiripan tinggi dengan judul yang sudah ada. Pertimbangkan untuk mengubah judul.' : 'Judul dapat diterima.'}</p>
-                </div>
-            `);
-            
-            // If similarity is high, show modal with details
-            if (similarity >= 40) {
-                let similarTitlesHtml = '';
-                
-                if (similarTitles && similarTitles.length > 0) {
-                    similarTitles.forEach(title => {
-                        let titleSimilarityClass = 'similarity-low';
-                        if (title.Similarity >= 70) titleSimilarityClass = 'similarity-high';
-                        else if (title.Similarity >= 40) titleSimilarityClass = 'similarity-medium';
+            fetch(scriptUrl, {method: "POST", body: fd})
+                .then(r => r.json())
+                .then(res => {
+                    if (res.result === "success") {
+                        const sim = Number(res.similarity || 0);
+                        let cls = "similarity-low", msg = "Rendah", rec = "Diterima", recClass = "recommendation-accepted";
+                        if (sim >= 60) {
+                            cls = "similarity-high";
+                            msg = "Tinggi";
+                            rec = "Dikembalikan";
+                            recClass = "recommendation-rejected";
+                        } else if (sim >= 35) {
+                            cls = "similarity-medium";
+                            msg = "Sedang";
+                            rec = "Diperbaiki";
+                            recClass = "recommendation-revised";
+                        }
                         
-                        similarTitlesHtml += `<div class="mb-2 p-2 border rounded">
-                            <div class="fw-bold">${title.Judul}</div>
-                            <div class="small">Oleh: ${title.Penulis} (${title.Tahun}) - Similarity: <span class="${titleSimilarityClass}">${title.Similarity.toFixed(2)}%</span></div>
-                        </div>`;
-                    });
-                } else {
-                    similarTitlesHtml = '<p>Tidak ditemukan judul yang mirip secara spesifik.</p>';
-                }
-                
-                $('#similarityResult').html(`
-                    <div class="similarity-result ${similarityBg}">
-                        <p class="mb-1">Tingkat Similarity: <span class="${similarityClass}">${similarity.toFixed(2)}% (${similarityText})</span></p>
-                        <div class="similarity-progress mt-2">
-                            <div class="similarity-progress-bar ${similarityBg}" style="width: ${similarity}%">
-                                ${similarity.toFixed(2)}%
+                        // Update UI with results
+                        $("#similarityCheckResult").html(`
+                            <div class="similarity-result ${cls === 'similarity-high' ? 'similarity-high-bg' : cls === 'similarity-medium' ? 'similarity-medium-bg' : 'similarity-low-bg'}">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Tingkat Similarity:</span>
+                                    <span class="fw-bold ${cls}">${sim}% (${msg})</span>
+                                </div>
+                                <div class="similarity-progress mt-1">
+                                    <div class="similarity-progress-bar ${cls}" style="width: ${sim}%;">${sim}%</div>
+                                </div>
                             </div>
-                        </div>
-                        <p class="mb-0 mt-2">${similarity >= 70 ? 'Judul memiliki kemiripan tinggi dengan judul yang sudah ada. Pertimbangkan untuk mengubah judul.' : 'Judul memiliki kemiripan sedang dengan judul yang sudah ada.'}</p>
-                    </div>
-                `);
-                
-                $('#similarTitlesList').html(similarTitlesHtml);
-                $('#similarityModal').modal('show');
-            }
+                        `);
+                        
+                        $("#recommendation").html(`
+                            <div class="similarity-recommendation ${recClass}">
+                                Rekomendasi: <strong>${rec}</strong>
+                            </div>
+                        `);
+                        
+                        // Display similar titles
+                        let similarTitlesHtml = '';
+                        if (res.similarTitles && res.similarTitles.length > 0) {
+                            similarTitlesHtml = '<div class="similarity-list mt-2">';
+                            res.similarTitles.forEach(title => {
+                                similarTitlesHtml += `
+                                    <div class="similarity-list-item ${cls}">
+                                        <div class="similarity-list-title">${title.Judul}</div>
+                                        <div class="similarity-list-meta">
+                                            Oleh: ${title.Penulis || ''}, ${title.Tahun || ''}
+                                            <span class="similarity-percentage">${title.Similarity}%</span>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            similarTitlesHtml += '</div>';
+                        } else {
+                            similarTitlesHtml = '<div class="text-muted mt-2">Tidak ditemukan judul yang mirip signifikan.</div>';
+                        }
+                        $("#similarTitlesList").html(similarTitlesHtml);
+                        
+                        // Show modal if similarity is high or medium
+                        if (sim >= 35) {
+                            $('#similarityModal').modal('show');
+                        } else {
+                            showNotification(`Judul memiliki similarity rendah (${sim}%). Diterima untuk diajukan.`, 'success');
+                        }
+                    } else {
+                        $("#similarityCheckResult").html('<div class="text-danger mt-2">' + (res.message || 'Gagal cek similarity') + '</div>');
+                        showNotification('Gagal memeriksa similarity: ' + (res.message || 'Kesalahan tidak diketahui'), 'error');
+                    }
+                })
+                .catch(err => {
+                    console.error('Error checking similarity:', err);
+                    $("#similarityCheckResult").html('<div class="text-danger mt-2">Kesalahan koneksi</div>');
+                    showNotification('Terjadi kesalahan koneksi saat memeriksa similarity', 'error');
+                });
         }
-        
         // Load statistik data
         function loadStatistikData() {
             // In a real application, this would come from the server
@@ -2231,16 +2228,13 @@
             updateWaktuChart();
             updateTrendChart();
         }
-        
         // Initialize charts
         function initCharts() {
             // Charts will be initialized when statistik section is loaded
         }
-        
         // Update prodi chart
         function updateProdiChart() {
             const ctx = document.getElementById('prodiChart').getContext('2d');
-            
             // Sample data
             const data = {
                 labels: ['Ekonomi Syariah', 'Perbankan Syariah', 'Manajemen Bisnis Syariah'],
@@ -2260,12 +2254,12 @@
                     borderWidth: 1
                 }]
             };
-            
             const config = {
                 type: 'bar',
                 data: data,
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'top',
@@ -2274,17 +2268,22 @@
                             display: true,
                             text: 'Jumlah Bimbingan per Program Studi'
                         }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
                     }
                 },
             };
-            
             new Chart(ctx, config);
         }
-        
         // Update status chart
         function updateStatusChart() {
             const ctx = document.getElementById('statusChart').getContext('2d');
-            
             // Sample data
             const data = {
                 labels: ['Selesai', 'Dalam Proses', 'Terlambat'],
@@ -2303,12 +2302,12 @@
                     borderWidth: 1
                 }]
             };
-            
             const config = {
                 type: 'doughnut',
                 data: data,
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'top',
@@ -2320,14 +2319,11 @@
                     }
                 },
             };
-            
             new Chart(ctx, config);
         }
-        
         // Update waktu chart
         function updateWaktuChart() {
             const ctx = document.getElementById('waktuChart').getContext('2d');
-            
             // Sample data
             const data = {
                 labels: ['Ekonomi Syariah', 'Perbankan Syariah', 'Manajemen Bisnis Syariah'],
@@ -2339,12 +2335,12 @@
                     borderWidth: 1
                 }]
             };
-            
             const config = {
                 type: 'bar',
                 data: data,
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'top',
@@ -2361,14 +2357,11 @@
                     }
                 },
             };
-            
             new Chart(ctx, config);
         }
-        
         // Update trend chart
         function updateTrendChart() {
             const ctx = document.getElementById('trendChart').getContext('2d');
-            
             // Sample data
             const data = {
                 labels: ['2018', '2019', '2020', '2021', '2022'],
@@ -2380,12 +2373,12 @@
                     tension: 0.1
                 }]
             };
-            
             const config = {
                 type: 'line',
                 data: data,
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'top',
@@ -2402,14 +2395,11 @@
                     }
                 },
             };
-            
             new Chart(ctx, config);
         }
-        
         // Handle skripsi upload form submission
         $('#uploadSkripsiForm').submit(function(e) {
             e.preventDefault();
-            
             // Basic validation
             const nim = $('#nimSkripsi').val();
             const nama = $('#namaSkripsi').val();
@@ -2417,34 +2407,32 @@
             const judul = $('#judulSkripsiFinal').val();
             const tahunLulus = $('#tahunLulus').val();
             const tanggalSidang = $('#tanggalSidang').val();
+            const dosenPembimbing1 = $('#dosenPembimbing1Skripsi').val();
+            const dosenPembimbing1Nama = $('#dosenPembimbing1Skripsi option:selected').text();
+            const dosenPembimbing2 = $('#dosenPembimbing2Skripsi').val();
+            const dosenPembimbing2Nama = $('#dosenPembimbing2Skripsi option:selected').text();
             const fileInput = $('#fileSkripsi')[0];
             const approval = $('#approvalCheck').is(':checked');
-            
-            if (!nim || !nama || !prodi || !judul || !tahunLulus || !tanggalSidang || !fileInput.files[0] || !approval) {
+            if (!nim || !nama || !prodi || !judul || !tahunLulus || !tanggalSidang || !dosenPembimbing1 || !fileInput.files[0] || !approval) {
                 showNotification('Harap lengkapi semua field dan centang persetujuan', 'warning');
                 return;
             }
-            
             const file = fileInput.files[0];
-            
             // Validate file size
             if (file.size > 10 * 1024 * 1024) { // 10MB
                 showNotification('Ukuran file terlalu besar. Maksimal 10MB.', 'warning');
                 return;
             }
-            
             // Show loading
             const submitBtn = $(this).find('button[type="submit"]');
             const originalText = submitBtn.html();
             submitBtn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupload...');
             submitBtn.prop('disabled', true);
-            
             // Convert file to base64
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function() {
                 const base64 = reader.result.split(',')[1];
-                
                 // Prepare data for submission
                 const formData = new FormData();
                 formData.append('action', 'uploadSkripsiFinal');
@@ -2454,10 +2442,13 @@
                 formData.append('judul', judul);
                 formData.append('tahunLulus', tahunLulus);
                 formData.append('tanggalSidang', tanggalSidang);
+                formData.append('dosenPembimbing1', dosenPembimbing1);
+                formData.append('dosenPembimbing1Nama', dosenPembimbing1Nama);
+                formData.append('dosenPembimbing2', dosenPembimbing2 || '');
+                formData.append('dosenPembimbing2Nama', dosenPembimbing2Nama || '');
                 formData.append('filename', file.name);
                 formData.append('mimeType', file.type);
                 formData.append('file', base64);
-                
                 // Send data to Google Apps Script
                 fetch(scriptUrl, {
                     method: 'POST',
@@ -2468,7 +2459,6 @@
                     if (data.result === 'success') {
                         showNotification('Skripsi final berhasil diupload dan data telah disinkronisasi!', 'success');
                         $('#uploadSkripsiForm')[0].reset();
-                        
                         // Reload data to reflect changes
                         loadInitialData();
                     } else {
@@ -2485,7 +2475,6 @@
                     submitBtn.prop('disabled', false);
                 });
             };
-            
             reader.onerror = function(error) {
                 console.error('Error reading file:', error);
                 showNotification('Terjadi kesalahan saat membaca file.', 'error');
@@ -2493,7 +2482,6 @@
                 submitBtn.prop('disabled', false);
             };
         });
-        
         // Helper function to get status class for badges
         function getStatusClass(status) {
             switch(status) {
@@ -2503,7 +2491,6 @@
                 default: return 'bg-secondary';
             }
         }
-        
         // Helper function to get prodi name from code
         function getProdiName(code) {
             switch(code) {
@@ -2513,27 +2500,21 @@
                 default: return code;
             }
         }
-        
         // Helper function to calculate semester based on NIM
         function calculateSemester(nim) {
             if (!nim) return 0;
-            
             // Extract year from NIM (assuming first two digits represent admission year)
             const admissionYear = parseInt('20' + nim.substring(0, 2));
             const currentYear = 2025; // Tahun berjalan (2025)
             const currentMonth = new Date().getMonth() + 1; // Bulan berjalan (1-12)
-            
             // Calculate approximate semester (2 semesters per year)
             let semester = (currentYear - admissionYear) * 2;
-            
             // Adjust for current month
             // Semester ganjil: Juli-Desember (bulan 7-12)
             // Semester genap: Januari-Juni (bulan 1-6)
             if (currentMonth >= 7) semester += 1;
-            
             return semester;
         }
-        
         // Helper function to get warning level based on semester
         function getWarningLevel(semester) {
             if (semester >= 13) return 'SANGAT TINGGI';
@@ -2541,7 +2522,6 @@
             if (semester >= 9) return 'SEDANG';
             return 'RENDAH';
         }
-        
         // Helper function to get tahap bimbingan based on progress
         function getTahapBimbingan(progress) {
             if (progress >= 75) return 'Bimbingan Skripsi';
@@ -2549,19 +2529,15 @@
             if (progress >= 25) return 'Bimbingan Proposal';
             return 'Pengajuan Judul';
         }
-        
         // Show notification
         function showNotification(message, type = 'info') {
             const toast = $('.toast');
             const toastBody = $('.toast-body');
-            
             // Set message and style based on type
             toastBody.text(message);
-            
             // Change header color based on type
             const header = toast.find('.toast-header');
             header.removeClass('bg-info bg-success bg-warning bg-danger');
-            
             switch(type) {
                 case 'success':
                     header.addClass('bg-success text-white');
@@ -2575,22 +2551,116 @@
                 default:
                     header.addClass('bg-info text-white');
             }
-            
             // Show the toast
             toast.toast('show');
         }
-        
         // Show loading state
         function showLoading() {
-            $('#tableBimbingan tbody').html('<tr><td colspan="8" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
+            $('#tableBimbingan tbody').html('<tr><td colspan="8" class="text-center py-3"><div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
         }
-        
         // Hide loading state
         function hideLoading() {
             // Loading state will be replaced with actual data
         }
+        // Notification modal & send
+        function openNotif(nim, nama) {
+            try {
+                nim = decodeURIComponent(nim);
+            } catch(e) {}
+            $('#notifNim').val(nim);
+            $('#recipientEmail').val('');
+            $('#notifSubject').val('Pemberitahuan Bimbingan');
+            $('#notifMessage').val(`Halo ${nama || ''},
+Mohon perhatikan progres bimbingan skripsi Anda. Silakan hubungi pembimbing untuk tindakan lebih lanjut.
+Salam,`);
+            $('#notificationModal').modal('show');
+        }
+        // View proposal function
+        function viewProposal(nim) {
+            try {
+                nim = decodeURIComponent(nim);
+            } catch(e) {
+                console.error('Error decoding NIM:', e);
+            }
+            // Cari dengan toleransi perbedaan case dan trim spasi
+            const proposal = bimbinganData.find(item => 
+                item.NIM && item.NIM.toString().trim().toLowerCase() === nim.toString().trim().toLowerCase()
+            );
+            if (!proposal) {
+                console.error('Proposal not found for NIM:', nim, 'Available data:', bimbinganData);
+                showNotification('Data proposal tidak ditemukan', 'warning');
+                return;
+            }
+            // Isi data ke dalam modal
+            $('#viewNim').text(proposal.NIM || '');
+            $('#viewNama').text(proposal.Nama || '');
+            $('#viewProdi').text(getProdiName(proposal.Prodi) || '');
+            $('#viewTahunAkademik').text(proposal.TahunAkademik || '');
+            $('#viewJudul').text(proposal.Judul || '');
+            $('#viewPembimbing1').text(proposal.Pembimbing1 || '');
+            $('#viewPembimbing2').text(proposal.Pembimbing2 || '');
+            // Tampilkan link file jika ada
+            if (proposal.FileId) {
+                $('#viewFile').html(`<a href="https://drive.google.com/file/d/${proposal.FileId}/view" target="_blank" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i> Lihat File Proposal</a>`);
+            } else {
+                // Coba cari file proposal berdasarkan NIM di Google Drive
+                $('#viewFile').html(`<span class="text-muted">File sedang dicari...</span>`);
+                // Panggil fungsi untuk mencari file berdasarkan NIM
+                searchProposalFileByNIM(nim).then(fileInfo => {
+                    if (fileInfo && fileInfo.fileId) {
+                        $('#viewFile').html(`<a href="https://drive.google.com/file/d/${fileInfo.fileId}/view" target="_blank" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i> Lihat File Proposal</a>`);
+                    } else {
+                        $('#viewFile').html(`<span class="text-muted">File tidak ditemukan</span>`);
+                    }
+                }).catch(error => {
+                    console.error('Error searching for file:', error);
+                    $('#viewFile').html(`<span class="text-muted">File tidak ditemukan</span>`);
+                });
+            }
+            // Tampilkan modal
+            new bootstrap.Modal(document.getElementById('viewProposalModal')).show();
+        }
+        // Search Proposal File by NIM
+        function searchProposalFileByNIM(nim) {
+            return new Promise((resolve, reject) => {
+                const fd = new FormData();
+                fd.append('action', 'searchProposalByNIM');
+                fd.append('nim', nim);
+                fetch(scriptUrl, { method: 'POST', body: fd })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.result === 'success' && res.fileId) {
+                            resolve({ fileId: res.fileId, fileName: res.fileName });
+                        } else {
+                            resolve(null);
+                        }
+                    })
+                    .catch(err => {
+                        reject(err);
+                    });
+            });
+        }
+        // Small utilities
+        function showToast(message, type='info', timeout=4000) {
+            const id = 't'+Date.now();
+            const el = $(`<div id="${id}" class="toast align-items-center text-bg-${type=="danger"?"danger":type=="success"?"success":type=="warning"?"warning":"primary"} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div></div>`);
+            $('.notification-toast').append(el);
+            const t = new bootstrap.Toast(document.getElementById(id), { delay: timeout });
+            t.show();
+            // remove after hidden
+            el.on('hidden.bs.toast', ()=> el.remove());
+        }
+        function escapeHtml(s) { 
+            if(!s && s!==0) return ''; 
+            return String(s).replace(/[&<>"'`=\/]/g, function (c) { 
+                return {'&':'&amp;','<':'<','>':'>','"':'&quot;',"'":'&#39;',"/":'&#x2F;','`':'&#x60;','=':'&#x3D;'}[c]; 
+            }); 
+        }
+        function escapeJs(s) { 
+            return (s||'').replace(/'/g,"\\'").replace(/"/g,'\\"'); 
+        }
     </script>
 </body>
 </html>
-
 
