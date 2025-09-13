@@ -691,6 +691,39 @@
             </div>
         </div>
     </div>
+    <!-- Modal for Tahap Bimbingan Details -->
+    <div class="modal fade" id="tahapDetailModal" tabindex="-1" aria-labelledby="tahapDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tahapDetailModalLabel">Detail Tahap Bimbingan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="tahapDetailContent">
+                        <table class="table table-bordered">
+                            <tr><th>NIM</th><td id="detailNim">-</td></tr>
+                            <tr><th>Nama</th><td id="detailNama">-</td></tr>
+                            <tr><th>Tahap Saat Ini</th><td id="detailTahap">-</td></tr>
+                            <tr><th>Progress</th><td id="detailProgress">-</td></tr>
+                            <tr><th>Tanggal Mulai</th><td id="detailMulai">-</td></tr>
+                            <tr><th>Tanggal Update Terakhir</th><td id="detailUpdate">-</td></tr>
+                            <tr><th>Pembimbing 1</th><td id="detailPembimbing1">-</td></tr>
+                            <tr><th>Pembimbing 2</th><td id="detailPembimbing2">-</td></tr>
+                        </table>
+                        
+                        <h6 class="mt-4">Riwayat Tahapan:</h6>
+                        <ul class="list-group" id="riwayatTahapan">
+                            <li class="list-group-item">Belum ada riwayat</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <div class="bg-dark" id="sidebar">
@@ -953,7 +986,63 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- Data will be populated by JavaScript -->
+                                            <tr>
+                                                <td>202151001</td>
+                                                <td>Ahmad Sutisna</td>
+                                                <td>Bimbingan Proposal</td>
+                                                <td>
+                                                    <div class="progress" style="height: 10px;">
+                                                        <div class="progress-bar" role="progressbar" style="width: 45%;">45%</div>
+                                                    </div>
+                                                </td>
+                                                <td>12/04/2023</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-info view-tahap-btn" data-nim="202151001" data-nama="Ahmad Sutisna">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-success complete-tahap-btn" data-nim="202151001">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>202151002</td>
+                                                <td>Budi Santoso</td>
+                                                <td>Seminar Hasil</td>
+                                                <td>
+                                                    <div class="progress" style="height: 10px;">
+                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 70%;">70%</div>
+                                                    </div>
+                                                </td>
+                                                <td>15/04/2023</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-info view-tahap-btn" data-nim="202151002" data-nama="Budi Santoso">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-success complete-tahap-btn" data-nim="202151002">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>202151003</td>
+                                                <td>Citra Dewi</td>
+                                                <td>Bimbingan Skripsi</td>
+                                                <td>
+                                                    <div class="progress" style="height: 10px;">
+                                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 85%;">85%</div>
+                                                    </div>
+                                                </td>
+                                                <td>18/04/2023</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-info view-tahap-btn" data-nim="202151003" data-nama="Citra Dewi">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-success complete-tahap-btn" data-nim="202151003">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -1276,7 +1365,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Google Apps Script Web App URL
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbzKUTp5tkWano-rBtv1OV15V7DRvUwF4KwYseMIkOOx0U-rx6Tk7BeKu7leYm-KVU80cQ/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxhBbujvp4bW-7iPjvDgSbT7HGOeyyTrmc6TxlFX3z_bOuQgUwHTlV1y9yoXor8JAjM/exec';
         // Global variables
         let currentSection = 'pengajuan';
         let currentMenu = 'bimbingan';
@@ -1603,6 +1692,89 @@
             $('#proceedAnywayBtn').click(function() {
                 $('#similarityModal').modal('hide');
                 $('#pengajuanProposalForm').off('submit').submit();
+            });
+            
+            // Event handler untuk tombol lihat detail tahap bimbingan
+            $(document).on('click', '.view-tahap-btn', function() {
+                const nim = $(this).data('nim');
+                const nama = $(this).data('nama');
+                
+                // Isi data ke modal (dalam implementasi nyata, data ini akan diambil dari server)
+                $('#detailNim').text(nim);
+                $('#detailNama').text(nama);
+                
+                // Data contoh (harusnya dari server)
+                const tahapan = {
+                    '202151001': { tahap: 'Bimbingan Proposal', progress: '45%', mulai: '01/03/2023', update: '12/04/2023', pembimbing1: 'Dr. Iskandar, M.Ag.', pembimbing2: 'Dr. Hj. Wahdatunnisa, M.A.' },
+                    '202151002': { tahap: 'Seminar Hasil', progress: '70%', mulai: '15/02/2023', update: '15/04/2023', pembimbing1: 'Prof. Dr. Hj. Darmawati, M.Hum', pembimbing2: 'Dr. H. Moh. Mahrus, M.HI' },
+                    '202151003': { tahap: 'Bimbingan Skripsi', progress: '85%', mulai: '10/01/2023', update: '18/04/2023', pembimbing1: 'Dr. Tikawati, M.SI', pembimbing2: 'Dr. Hj. Norvadewi, M.Ag.' }
+                };
+                
+                if (tahapan[nim]) {
+                    $('#detailTahap').text(tahapan[nim].tahap);
+                    $('#detailProgress').text(tahapan[nim].progress);
+                    $('#detailMulai').text(tahapan[nim].mulai);
+                    $('#detailUpdate').text(tahapan[nim].update);
+                    $('#detailPembimbing1').text(tahapan[nim].pembimbing1);
+                    $('#detailPembimbing2').text(tahapan[nim].pembimbing2);
+                    
+                    // Riwayat contoh
+                    $('#riwayatTahapan').html(`
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Pengajuan Judul
+                            <span class="badge bg-success rounded-pill">Selesai</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Bimbingan Proposal
+                            <span class="badge bg-success rounded-pill">Selesai</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Seminar Hasil
+                            <span class="badge bg-warning rounded-pill">Dalam Proses</span>
+                        </li>
+                        <li class="list-group-item">
+                            Bimbingan Skripsi
+                            <span class="badge bg-secondary rounded-pill">Belum Dimulai</span>
+                        </li>
+                    `);
+                }
+                
+                $('#tahapDetailModal').modal('show');
+            });
+            
+            // Event handler untuk tombol selesaikan tahap
+            $(document).on('click', '.complete-tahap-btn', function() {
+                const nim = $(this).data('nim');
+                const row = $(this).closest('tr');
+                
+                // Tampilkan konfirmasi
+                if (confirm(`Apakah Anda yakin ingin menandai tahapan bimbingan untuk NIM ${nim} sebagai selesai?`)) {
+                    // Simulasi update progress
+                    const currentProgress = parseInt(row.find('.progress-bar').css('width'));
+                    const newProgress = Math.min(100, currentProgress + 25);
+                    
+                    // Update progress bar
+                    row.find('.progress-bar')
+                        .css('width', newProgress + '%')
+                        .attr('aria-valuenow', newProgress)
+                        .text(newProgress + '%');
+                    
+                    // Update tahapan text berdasarkan progress
+                    let newTahap = 'Pengajuan Judul';
+                    if (newProgress >= 25) newTahap = 'Bimbingan Proposal';
+                    if (newProgress >= 50) newTahap = 'Seminar Hasil';
+                    if (newProgress >= 75) newTahap = 'Bimbingan Skripsi';
+                    if (newProgress >= 100) newTahap = 'Selesai';
+                    
+                    row.find('td:eq(2)').text(newTahap);
+                    
+                    // Update tanggal
+                    const today = new Date();
+                    row.find('td:eq(4)').text(today.toLocaleDateString('id-ID'));
+                    
+                    // Tampilkan notifikasi
+                    showNotification(`Tahapan bimbingan untuk NIM ${nim} telah diperbarui!`, 'success');
+                }
             });
         });
         // Initialize sidebar menu functionality
@@ -1945,33 +2117,8 @@
         }
         // Load tahap bimbingan data
         function loadTahapBimbingan() {
-            const tableBody = $('#tableTahapBimbingan tbody');
-            tableBody.empty();
-            if (bimbinganData.length === 0) {
-                tableBody.append('<tr><td colspan="6" class="text-center py-3">Tidak ada data tahap bimbingan</td></tr>');
-                return;
-            }
-            bimbinganData.forEach(item => {
-                const progress = Math.min(100, Math.floor(Math.random() * 100));
-                const row = `
-                    <tr>
-                        <td class="py-2">${item.NIM || ''}</td>
-                        <td class="py-2">${item.Nama || ''}</td>
-                        <td class="py-2">${getTahapBimbingan(progress)}</td>
-                        <td class="py-2">
-                            <div class="progress" style="height: 10px;">
-                                <div class="progress-bar" role="progressbar" style="width: ${progress}%;">${progress}%</div>
-                            </div>
-                        </td>
-                        <td class="py-2">${new Date().toLocaleDateString('id-ID')}</td>
-                        <td class="py-2">
-                            <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
-                        </td>
-                    </tr>
-                `;
-                tableBody.append(row);
-            });
+            // Data sudah di-hardcode di HTML, jadi tidak perlu memuat ulang
+            // Tombol aksi sudah memiliki event handler yang terpasang
         }
         // Load status bimbingan data
         function loadStatusBimbingan() {
@@ -2464,24 +2611,24 @@
                     } else {
                         showNotification('Terjadi kesalahan: ' + data.message, 'error');
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Terjadi kesalahan saat mengupload skripsi final.', 'error');
-                })
-                .finally(() => {
-                    // Restore button
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('Terjadi kesalahan saat mengupload skripsi final.', 'error');
+                    })
+                    .finally(() => {
+                        // Restore button
+                        submitBtn.html(originalText);
+                        submitBtn.prop('disabled', false);
+                    });
+                };
+                reader.onerror = function(error) {
+                    console.error('Error reading file:', error);
+                    showNotification('Terjadi kesalahan saat membaca file.', 'error');
                     submitBtn.html(originalText);
                     submitBtn.prop('disabled', false);
-                });
-            };
-            reader.onerror = function(error) {
-                console.error('Error reading file:', error);
-                showNotification('Terjadi kesalahan saat membaca file.', 'error');
-                submitBtn.html(originalText);
-                submitBtn.prop('disabled', false);
-            };
-        });
+                };
+            });
         // Helper function to get status class for badges
         function getStatusClass(status) {
             switch(status) {
@@ -2663,5 +2810,3 @@ Salam,`);
     </script>
 </body>
 </html>
-
-
