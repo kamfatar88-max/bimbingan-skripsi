@@ -505,6 +505,24 @@
                 height: 600px !important;
             }
         }
+        /* Tahap Bimbingan Table Styling */
+        .tahap-bimbingan-select {
+            width: 100%;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+        .tahap-bimbingan-badge {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 12px;
+        }
+        .tahap-pengajuan { background-color: #f0f0f0; color: #333; }
+        .tahap-proposal { background-color: #d4edda; color: #155724; }
+        .tahap-seminar { background-color: #d1ecf1; color: #0c5460; }
+        .tahap-skripsi { background-color: #fff3cd; color: #856404; }
+        .tahap-selesai { background-color: #d4edda; color: #155724; }
     </style>
 </head>
 <body>
@@ -687,6 +705,36 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for Edit Tahap Bimbingan -->
+    <div class="modal fade" id="editTahapModal" tabindex="-1" aria-labelledby="editTahapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTahapModalLabel">Ubah Tahap Bimbingan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editTahapForm">
+                        <input type="hidden" id="editTahapNim" name="nim">
+                        <div class="mb-3">
+                            <label for="tahapSelect" class="form-label">Tahap Bimbingan Saat Ini</label>
+                            <select class="form-select form-select-sm" id="tahapSelect" name="tahap" required>
+                                <option value="Pengajuan Judul">Pengajuan Judul</option>
+                                <option value="Bimbingan Proposal">Bimbingan Proposal</option>
+                                <option value="Seminar Hasil">Seminar Hasil</option>
+                                <option value="Bimbingan Skripsi">Bimbingan Skripsi</option>
+                                <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="saveTahapBtn">Simpan</button>
                 </div>
             </div>
         </div>
@@ -934,11 +982,9 @@
                                 <h5 class="card-title mb-0">Tahap Bimbingan Skripsi</h5>
                             </div>
                             <div class="card-body p-2">
-                                <div class="progress mb-3" style="height: 20px;">
-                                    <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Pengajuan Judul</div>
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Bimbingan Proposal</div>
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Seminar Hasil</div>
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Bimbingan Skripsi</div>
+                                <div class="alert alert-info alert-sm p-2 mb-3">
+                                    <i class="fas fa-info-circle"></i> 
+                                    Atur tahap bimbingan saat ini untuk setiap mahasiswa. Perubahan akan disimpan secara permanen.
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover table-sm" id="tableTahapBimbingan">
@@ -946,7 +992,9 @@
                                             <tr>
                                                 <th>NIM</th>
                                                 <th>Nama</th>
-                                                <th>Tahap</th>
+                                                <th>Prodi</th>
+                                                <th>Judul</th>
+                                                <th>Tahap Saat Ini</th>
                                                 <th>Progress</th>
                                                 <th>Terakhir Update</th>
                                                 <th>Aksi</th>
@@ -1118,7 +1166,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Upload Skripsi Final - DITAMBAHKAN KOLOM PEMBIMBING -->
+                    <!-- Upload Skripsi Final -->
                     <div class="content-section" id="uploadSkripsi" style="display: none;">
                         <div class="card">
                             <div class="card-header">
@@ -1276,7 +1324,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Google Apps Script Web App URL
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbzKUTp5tkWano-rBtv1OV15V7DRvUwF4KwYseMIkOOx0U-rx6Tk7BeKu7leYm-KVU80cQ/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwdybInWa89OYFVUn6Dxqr61dm7B9rFA8D1NR9JbWjcsVQQf7mthhpWD1DqLbcShTQX/exec';
         // Global variables
         let currentSection = 'pengajuan';
         let currentMenu = 'bimbingan';
@@ -1604,6 +1652,135 @@
                 $('#similarityModal').modal('hide');
                 $('#pengajuanProposalForm').off('submit').submit();
             });
+            // Event handler untuk edit tahap bimbingan
+            $('#tableTahapBimbingan').on('click', '.edit-tahap-btn', function() {
+                const nim = $(this).data('nim');
+                const currentTahap = $(this).data('tahap');
+                $('#editTahapNim').val(nim);
+                $('#tahapSelect').val(currentTahap);
+                $('#editTahapModal').modal('show');
+            });
+            // Event handler untuk simpan tahap bimbingan
+            $('#saveTahapBtn').click(function() {
+                const nim = $('#editTahapNim').val();
+                const newTahap = $('#tahapSelect').val();
+                // Show loading
+                $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                $(this).prop('disabled', true);
+                // Send update request
+                $.ajax({
+                    url: scriptUrl,
+                    method: 'POST',
+                    data: {
+                        action: 'updateTahapBimbingan',
+                        nim: nim,
+                        tahap: newTahap
+                    },
+                    success: function(response) {
+                        const data = JSON.parse(response);
+                        if (data.result === 'success') {
+                            showNotification('Tahap bimbingan berhasil diperbarui', 'success');
+                            $('#editTahapModal').modal('hide');
+                            // Reload data to reflect changes
+                            loadBimbinganDataFromServer();
+                        } else {
+                            showNotification('Gagal memperbarui tahap: ' + data.message, 'error');
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                        showNotification('Terjadi kesalahan saat memperbarui tahap', 'error');
+                    },
+                    complete: function() {
+                        $('#saveTahapBtn').html('<i class="fas fa-check"></i>').prop('disabled', false);
+                    }
+                });
+            });
+            // Event handler untuk upload skripsi final
+            $('#uploadSkripsiForm').submit(function(e) {
+                e.preventDefault();
+                // Basic validation
+                const nim = $('#nimSkripsi').val();
+                const nama = $('#namaSkripsi').val();
+                const prodi = $('#prodiSkripsi').val();
+                const judul = $('#judulSkripsiFinal').val();
+                const tahunLulus = $('#tahunLulus').val();
+                const tanggalSidang = $('#tanggalSidang').val();
+                const dosenPembimbing1 = $('#dosenPembimbing1Skripsi').val();
+                const dosenPembimbing1Nama = $('#dosenPembimbing1Skripsi option:selected').text();
+                const dosenPembimbing2 = $('#dosenPembimbing2Skripsi').val();
+                const dosenPembimbing2Nama = $('#dosenPembimbing2Skripsi option:selected').text();
+                const fileInput = $('#fileSkripsi')[0];
+                const approval = $('#approvalCheck').is(':checked');
+                if (!nim || !nama || !prodi || !judul || !tahunLulus || !tanggalSidang || !dosenPembimbing1 || !fileInput.files[0] || !approval) {
+                    showNotification('Harap lengkapi semua field dan centang persetujuan', 'warning');
+                    return;
+                }
+                const file = fileInput.files[0];
+                // Validate file size
+                if (file.size > 10 * 1024 * 1024) { // 10MB
+                    showNotification('Ukuran file terlalu besar. Maksimal 10MB.', 'warning');
+                    return;
+                }
+                // Show loading
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalText = submitBtn.html();
+                submitBtn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupload...');
+                submitBtn.prop('disabled', true);
+                // Convert file to base64
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function() {
+                    const base64 = reader.result.split(',')[1];
+                    // Prepare data for submission
+                    const formData = new FormData();
+                    formData.append('action', 'uploadSkripsiFinal');
+                    formData.append('nim', nim);
+                    formData.append('nama', nama);
+                    formData.append('prodi', prodi);
+                    formData.append('judul', judul);
+                    formData.append('tahunLulus', tahunLulus);
+                    formData.append('tanggalSidang', tanggalSidang);
+                    formData.append('dosenPembimbing1', dosenPembimbing1);
+                    formData.append('dosenPembimbing1Nama', dosenPembimbing1Nama);
+                    formData.append('dosenPembimbing2', dosenPembimbing2 || '');
+                    formData.append('dosenPembimbing2Nama', dosenPembimbing2Nama || '');
+                    formData.append('filename', file.name);
+                    formData.append('mimeType', file.type);
+                    formData.append('file', base64);
+                    // Send data to Google Apps Script
+                    fetch(scriptUrl, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result === 'success') {
+                            showNotification('Skripsi final berhasil diupload dan data telah disinkronisasi!', 'success');
+                            $('#uploadSkripsiForm')[0].reset();
+                            // Reload data to reflect changes
+                            loadInitialData();
+                        } else {
+                            showNotification('Terjadi kesalahan: ' + data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('Terjadi kesalahan saat mengupload skripsi final.', 'error');
+                    })
+                    .finally(() => {
+                        // Restore button
+                        submitBtn.html(originalText);
+                        submitBtn.prop('disabled', false);
+                    });
+                };
+                reader.onerror = function(error) {
+                    console.error('Error reading file:', error);
+                    showNotification('Terjadi kesalahan saat membaca file.', 'error');
+                    submitBtn.html(originalText);
+                    submitBtn.prop('disabled', false);
+                };
+            });
         });
         // Initialize sidebar menu functionality
         function initSidebarMenu() {
@@ -1848,19 +2025,16 @@
             const selectPembimbing2 = $('#dosenPembimbing2');
             const selectPembimbing1Skripsi = $('#dosenPembimbing1Skripsi');
             const selectPembimbing2Skripsi = $('#dosenPembimbing2Skripsi');
-            
             // Clear existing options
             selectPembimbing1.empty();
             selectPembimbing2.empty();
             selectPembimbing1Skripsi.empty();
             selectPembimbing2Skripsi.empty();
-            
             // Add default options
             selectPembimbing1.append('<option value="">Pilih Dosen Pembimbing 1</option>');
             selectPembimbing2.append('<option value="">Pilih Dosen Pembimbing 2</option>');
             selectPembimbing1Skripsi.append('<option value="">Pilih Dosen Pembimbing 1</option>');
             selectPembimbing2Skripsi.append('<option value="">Pilih Dosen Pembimbing 2</option>');
-            
             // Add dosen options
             dosenList.forEach(dosen => {
                 selectPembimbing1.append(`<option value="${dosen.id}">${dosen.nama}</option>`);
@@ -1948,30 +2122,59 @@
             const tableBody = $('#tableTahapBimbingan tbody');
             tableBody.empty();
             if (bimbinganData.length === 0) {
-                tableBody.append('<tr><td colspan="6" class="text-center py-3">Tidak ada data tahap bimbingan</td></tr>');
+                tableBody.append('<tr><td colspan="8" class="text-center py-3">Tidak ada data tahap bimbingan</td></tr>');
                 return;
             }
             bimbinganData.forEach(item => {
-                const progress = Math.min(100, Math.floor(Math.random() * 100));
+                // Get the actual tahap from the data, not calculated
+                const tahap = item.TahapBimbingan || 'Pengajuan Judul'; // Default if not set
+                const progress = getProgressByTahap(tahap);
+                const tahapClass = getTahapClass(tahap);
                 const row = `
                     <tr>
                         <td class="py-2">${item.NIM || ''}</td>
                         <td class="py-2">${item.Nama || ''}</td>
-                        <td class="py-2">${getTahapBimbingan(progress)}</td>
+                        <td class="py-2">${getProdiName(item.Prodi) || ''}</td>
+                        <td class="py-2">${item.Judul || ''}</td>
+                        <td class="py-2">
+                            <span class="badge tahap-bimbingan-badge ${tahapClass}">${tahap}</span>
+                        </td>
                         <td class="py-2">
                             <div class="progress" style="height: 10px;">
                                 <div class="progress-bar" role="progressbar" style="width: ${progress}%;">${progress}%</div>
                             </div>
                         </td>
-                        <td class="py-2">${new Date().toLocaleDateString('id-ID')}</td>
+                        <td class="py-2">${new Date(item.Timestamp).toLocaleDateString('id-ID')}</td>
                         <td class="py-2">
-                            <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                            <button class="btn btn-sm btn-warning edit-tahap-btn" data-nim="${item.NIM}" data-tahap="${tahap}"><i class="fas fa-edit"></i></button>
                         </td>
                     </tr>
                 `;
                 tableBody.append(row);
             });
+            hideLoading();
+        }
+        // Helper function to get progress percentage based on tahap
+        function getProgressByTahap(tahap) {
+            switch(tahap) {
+                case 'Pengajuan Judul': return 25;
+                case 'Bimbingan Proposal': return 50;
+                case 'Seminar Hasil': return 75;
+                case 'Bimbingan Skripsi': return 90;
+                case 'Selesai': return 100;
+                default: return 10;
+            }
+        }
+        // Helper function to get CSS class for tahap badge
+        function getTahapClass(tahap) {
+            switch(tahap) {
+                case 'Pengajuan Judul': return 'tahap-pengajuan';
+                case 'Bimbingan Proposal': return 'tahap-proposal';
+                case 'Seminar Hasil': return 'tahap-seminar';
+                case 'Bimbingan Skripsi': return 'tahap-skripsi';
+                case 'Selesai': return 'tahap-selesai';
+                default: return 'tahap-pengajuan';
+            }
         }
         // Load status bimbingan data
         function loadStatusBimbingan() {
@@ -2140,11 +2343,9 @@
             $("#similarityCheckResult").html('<div class="spinner-border text-primary spinner-border-sm me-2"></div> Mengecek...');
             $("#similarTitlesList").empty();
             $("#recommendation").empty();
-            
             const fd = new FormData();
             fd.append("action", "checkSimilarity");
             fd.append("judul", judul);
-            
             fetch(scriptUrl, {method: "POST", body: fd})
                 .then(r => r.json())
                 .then(res => {
@@ -2162,7 +2363,6 @@
                             rec = "Diperbaiki";
                             recClass = "recommendation-revised";
                         }
-                        
                         // Update UI with results
                         $("#similarityCheckResult").html(`
                             <div class="similarity-result ${cls === 'similarity-high' ? 'similarity-high-bg' : cls === 'similarity-medium' ? 'similarity-medium-bg' : 'similarity-low-bg'}">
@@ -2175,13 +2375,11 @@
                                 </div>
                             </div>
                         `);
-                        
                         $("#recommendation").html(`
                             <div class="similarity-recommendation ${recClass}">
                                 Rekomendasi: <strong>${rec}</strong>
                             </div>
                         `);
-                        
                         // Display similar titles
                         let similarTitlesHtml = '';
                         if (res.similarTitles && res.similarTitles.length > 0) {
@@ -2202,7 +2400,6 @@
                             similarTitlesHtml = '<div class="text-muted mt-2">Tidak ditemukan judul yang mirip signifikan.</div>';
                         }
                         $("#similarTitlesList").html(similarTitlesHtml);
-                        
                         // Show modal if similarity is high or medium
                         if (sim >= 35) {
                             $('#similarityModal').modal('show');
@@ -2397,91 +2594,6 @@
             };
             new Chart(ctx, config);
         }
-        // Handle skripsi upload form submission
-        $('#uploadSkripsiForm').submit(function(e) {
-            e.preventDefault();
-            // Basic validation
-            const nim = $('#nimSkripsi').val();
-            const nama = $('#namaSkripsi').val();
-            const prodi = $('#prodiSkripsi').val();
-            const judul = $('#judulSkripsiFinal').val();
-            const tahunLulus = $('#tahunLulus').val();
-            const tanggalSidang = $('#tanggalSidang').val();
-            const dosenPembimbing1 = $('#dosenPembimbing1Skripsi').val();
-            const dosenPembimbing1Nama = $('#dosenPembimbing1Skripsi option:selected').text();
-            const dosenPembimbing2 = $('#dosenPembimbing2Skripsi').val();
-            const dosenPembimbing2Nama = $('#dosenPembimbing2Skripsi option:selected').text();
-            const fileInput = $('#fileSkripsi')[0];
-            const approval = $('#approvalCheck').is(':checked');
-            if (!nim || !nama || !prodi || !judul || !tahunLulus || !tanggalSidang || !dosenPembimbing1 || !fileInput.files[0] || !approval) {
-                showNotification('Harap lengkapi semua field dan centang persetujuan', 'warning');
-                return;
-            }
-            const file = fileInput.files[0];
-            // Validate file size
-            if (file.size > 10 * 1024 * 1024) { // 10MB
-                showNotification('Ukuran file terlalu besar. Maksimal 10MB.', 'warning');
-                return;
-            }
-            // Show loading
-            const submitBtn = $(this).find('button[type="submit"]');
-            const originalText = submitBtn.html();
-            submitBtn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupload...');
-            submitBtn.prop('disabled', true);
-            // Convert file to base64
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function() {
-                const base64 = reader.result.split(',')[1];
-                // Prepare data for submission
-                const formData = new FormData();
-                formData.append('action', 'uploadSkripsiFinal');
-                formData.append('nim', nim);
-                formData.append('nama', nama);
-                formData.append('prodi', prodi);
-                formData.append('judul', judul);
-                formData.append('tahunLulus', tahunLulus);
-                formData.append('tanggalSidang', tanggalSidang);
-                formData.append('dosenPembimbing1', dosenPembimbing1);
-                formData.append('dosenPembimbing1Nama', dosenPembimbing1Nama);
-                formData.append('dosenPembimbing2', dosenPembimbing2 || '');
-                formData.append('dosenPembimbing2Nama', dosenPembimbing2Nama || '');
-                formData.append('filename', file.name);
-                formData.append('mimeType', file.type);
-                formData.append('file', base64);
-                // Send data to Google Apps Script
-                fetch(scriptUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.result === 'success') {
-                        showNotification('Skripsi final berhasil diupload dan data telah disinkronisasi!', 'success');
-                        $('#uploadSkripsiForm')[0].reset();
-                        // Reload data to reflect changes
-                        loadInitialData();
-                    } else {
-                        showNotification('Terjadi kesalahan: ' + data.message, 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Terjadi kesalahan saat mengupload skripsi final.', 'error');
-                })
-                .finally(() => {
-                    // Restore button
-                    submitBtn.html(originalText);
-                    submitBtn.prop('disabled', false);
-                });
-            };
-            reader.onerror = function(error) {
-                console.error('Error reading file:', error);
-                showNotification('Terjadi kesalahan saat membaca file.', 'error');
-                submitBtn.html(originalText);
-                submitBtn.prop('disabled', false);
-            };
-        });
         // Helper function to get status class for badges
         function getStatusClass(status) {
             switch(status) {
@@ -2521,13 +2633,6 @@
             if (semester >= 11) return 'TINGGI';
             if (semester >= 9) return 'SEDANG';
             return 'RENDAH';
-        }
-        // Helper function to get tahap bimbingan based on progress
-        function getTahapBimbingan(progress) {
-            if (progress >= 75) return 'Bimbingan Skripsi';
-            if (progress >= 50) return 'Seminar Hasil';
-            if (progress >= 25) return 'Bimbingan Proposal';
-            return 'Pengajuan Judul';
         }
         // Show notification
         function showNotification(message, type = 'info') {
@@ -2600,45 +2705,13 @@ Salam,`);
             $('#viewPembimbing1').text(proposal.Pembimbing1 || '');
             $('#viewPembimbing2').text(proposal.Pembimbing2 || '');
             // Tampilkan link file jika ada
-            if (proposal.FileId) {
-                $('#viewFile').html(`<a href="https://drive.google.com/file/d/${proposal.FileId}/view" target="_blank" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i> Lihat File Proposal</a>`);
+            if (proposal.FileProposal) {
+                $('#viewFile').html(`<a href="${proposal.FileProposal}" target="_blank" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i> Lihat File Proposal</a>`);
             } else {
-                // Coba cari file proposal berdasarkan NIM di Google Drive
-                $('#viewFile').html(`<span class="text-muted">File sedang dicari...</span>`);
-                // Panggil fungsi untuk mencari file berdasarkan NIM
-                searchProposalFileByNIM(nim).then(fileInfo => {
-                    if (fileInfo && fileInfo.fileId) {
-                        $('#viewFile').html(`<a href="https://drive.google.com/file/d/${fileInfo.fileId}/view" target="_blank" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i> Lihat File Proposal</a>`);
-                    } else {
-                        $('#viewFile').html(`<span class="text-muted">File tidak ditemukan</span>`);
-                    }
-                }).catch(error => {
-                    console.error('Error searching for file:', error);
-                    $('#viewFile').html(`<span class="text-muted">File tidak ditemukan</span>`);
-                });
+                $('#viewFile').html(`<span class="text-muted">File tidak ditemukan</span>`);
             }
             // Tampilkan modal
             new bootstrap.Modal(document.getElementById('viewProposalModal')).show();
-        }
-        // Search Proposal File by NIM
-        function searchProposalFileByNIM(nim) {
-            return new Promise((resolve, reject) => {
-                const fd = new FormData();
-                fd.append('action', 'searchProposalByNIM');
-                fd.append('nim', nim);
-                fetch(scriptUrl, { method: 'POST', body: fd })
-                    .then(r => r.json())
-                    .then(res => {
-                        if (res.result === 'success' && res.fileId) {
-                            resolve({ fileId: res.fileId, fileName: res.fileName });
-                        } else {
-                            resolve(null);
-                        }
-                    })
-                    .catch(err => {
-                        reject(err);
-                    });
-            });
         }
         // Small utilities
         function showToast(message, type='info', timeout=4000) {
@@ -2663,5 +2736,3 @@ Salam,`);
     </script>
 </body>
 </html>
-
-
